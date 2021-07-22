@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.spring.my.GradeMapper">
+	<!-- 과정의 과목 조회 -->  	
+  	<select id="selectlist_subject" resultType="java.util.Map">
+  		SELECT r.ccode, r.sno, cs.jcode, j.jname, c.cname
+		from request r  join cousesubject cs on (r.ccode = cs.ccode)
+		join subject j on (cs.jcode = j.jcode)
+		join course c on (r.ccode = c.ccode)
+		WHERE r.sno = #{sno}
+  	</select>
+  	
+  	<insert id="insert">
+  	<!-- 리스트를 풀면 grade가 있다. -->
+  	<foreach collection="list" item="grade" index="index" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL">
+			into grade(ccode, sno,jcode,score) values (#{grade.ccode},#{sno},#{grade.jcode},#{grade.score})
+	</foreach>
+  	</insert>
+  	
+  	<select id="selectlist" resultType="java.util.Map">
+<!--   		SELECT g.ccode, g.sno, s.SNAME, g.SCORE, c.CNAME
+		from grade g
+		join STUDENT s on (g.sno = s.sno)
+		join request r on (r.sno = g.sno)
+		join course c on (r.ccode = c.ccode)
+		<if test="findkey != null">
+			<if test="findkey == cname">
+				WHERE c.${findkey} like '%' || #{findvalue} || '%'
+			</if>
+			<if test="findkey == sname">
+				WHERE s.${findkey} like '%' || #{findvalue} || '%'
+			</if>
+		</if> -->
+		SELECT g.sno, s.sname, g.jcode, j.jname, g.score
+		from grade g
+		join STUDENT s on (g.sno = s.sno)
+		join SUBJECT j on (g.jcode = j.jcode)
+		WHERE g.ccode = '001'
+		union all
+		select g.sno,'', '합계', '' jcode, sum(g.score) s
+		from grade g
+		WHERE g.ccode = '001'
+		GROUP by g.sno
+		union all
+		select g.sno, '', '평균', '' jcode, avg(g.score) a
+		from grade g
+		WHERE g.ccode = '001'
+		GROUP by g.sno
+		order by sno, jcode
+  	</select>
+  	
+</mapper>

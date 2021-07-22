@@ -1,0 +1,18 @@
+package org.spring.my.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@Controller
+@RequestMapping("ajax")
+public class AjaxController {
+	
+	//ajax테스트 폼으로
+	@RequestMapping("01")
+	public String ajax01() {
+		
+		return "0301_ajax/20210719_01";
+	}
+	
+}

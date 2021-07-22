@@ -1,0 +1,52 @@
+package org.spring.my.service;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.spring.my.dao.BoardDAO;
+import org.spring.my.dao.FileDAO;
+import org.spring.my.dto.Board;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+@Service
+public class BoardServiceimpl implements BoardService{
+	
+	@Autowired
+	private BoardDAO boarddao;
+	@Autowired
+	private FileService fileservice;
+	@Autowired
+	private FileDAO filedao;
+	
+	@Override
+	public void insert(Board board) {
+		//게시물 저장
+		boarddao.insert(board);//인서트를 하고나면 저장 후 bnum이 셋팅완료
+		
+		//매퍼에게 전달할 맵
+		Map<String, Object> fmap = new HashMap<>();
+		
+		//파일맵에 bnum저장
+		fmap.put("bnum", board.getBnum());
+		
+		//파일이름 리스트 만들기
+		List<String> filenamelist = new ArrayList<>();
+		
+		//board디티오의 파일 이름 저장
+		List<MultipartFile> files= board.getFiles();
+		
+		for(MultipartFile mf :files) {
+			//파일 업로드 저장
+			String filename = fileservice.fileupload(mf);
+			filenamelist.add(filename);
+		}
+		fmap.put("filenamelist", filenamelist);
+		System.out.println(fmap);
+		fileservice.insertboardfile(fmap);
+	}
+
+}

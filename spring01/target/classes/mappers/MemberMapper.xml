@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.spring.my.MemberMapper">
+  <insert id="insert">
+  	INSERT INTO member(userid,passwd,name)
+	VALUES (#{userid},#{passwd},#{name})
+  </insert>
+  <select id="selectlist" resultType="MemberDTO">
+  	SELECT * FROM member
+  </select>
+  
+  <select id="selectone" resultType="MemberDTO">
+ 	SELECT * FROM member
+	WHERE userid = #{userid}
+  </select>
+  
+  <delete id="delet">
+  	DELETE FROM member
+	WHERE userid = #{userid}
+  </delete>
+  
+  <update id="update">
+  	UPDATE member
+	set passwd = #{passwd}
+	WHERE userid = #{userid}
+  </update>
+  
+</mapper>

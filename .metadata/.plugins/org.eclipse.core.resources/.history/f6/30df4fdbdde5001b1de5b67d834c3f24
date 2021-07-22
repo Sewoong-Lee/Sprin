@@ -1,0 +1,11 @@
+package org.spring.my.dto;
+
+import java.util.Date;
+
+import lombok.Data;
+
+@Data
+public class Page {
+	private String findkey;
+	private String findvalue;
+}

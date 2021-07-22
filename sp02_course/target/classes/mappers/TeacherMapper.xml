@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.spring.my.TeacherMapper">
+ 	<insert id="insert">
+		INSERT INTO teacher(tno,tname,tel,zip,addr1,addr2,skill)
+		VALUES (#{tno},#{tname},#{tel},#{zip},#{addr1},#{addr2},#{skill})
+ 	</insert>
+  	
+  	<update id="update">
+  		UPDATE teacher
+		set 
+		tname = #{sname},
+		tel =  #{tel},
+		zip =  #{zip},
+		addr1 =  #{addr1},
+		addr2 =  #{addr2},
+		skill = #{skill}
+		WHERE tno = #{tno}
+  	</update>
+  	
+  	<delete id="delete">
+	  	DELETE FROM teacher
+		WHERE tno = #{tno}
+  	</delete>
+  	
+  	<select id="selectone" resultType="org.spring.my.dto.Teacher">
+  		SELECT * FROM teacher
+		WHERE tno = #{tno}
+  	</select>
+  	
+	<select id="selectlist" resultType="org.spring.my.dto.Teacher">
+  		SELECT *
+		FROM teacher 
+		<!-- <if test="findkey != null">
+		WHERE ${findkey} like '%' || #{findvalue} || '%'
+		</if> -->
+	
+  	</select>
+  	
+</mapper>

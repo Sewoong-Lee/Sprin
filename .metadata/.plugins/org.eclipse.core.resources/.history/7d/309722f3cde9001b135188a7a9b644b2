@@ -1,0 +1,32 @@
+package org.spring.my.controller;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.spring.my.dto.Reply;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+@Controller
+@RequestMapping("reply")
+public class ReplyController {
+	@Autowired
+	
+	//댓글 추가
+	@ResponseBody //리턴값을 테이터 자체로
+	@RequestMapping(value = "/", method = RequestMethod.POST)  //뒤에 아무것도 없으면 여기
+	public String add(@RequestBody Reply reply, HttpSession session, HttpServletRequest request) {
+		String userid = (String)session.getAttribute("userid"); //접속된 아이디
+		reply.setUserid("www");  //임시로 넣음 (새션 아직 안맺어서...)
+		reply.setIp(request.getRemoteAddr());
+		
+		
+		return "ok";
+	}
+	
+}

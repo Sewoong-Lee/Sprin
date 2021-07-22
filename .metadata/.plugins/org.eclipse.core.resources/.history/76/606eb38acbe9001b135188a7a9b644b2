@@ -1,0 +1,7 @@
+package org.spring.my.dao;
+
+import org.spring.my.dto.Reply;
+
+public interface ReplyDAO {
+	public void insert(Reply reply);
+}

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.spring.my.CourseMapper">
+	<!-- 과정저장 -->
+	<insert id="insert">
+	INSERT INTO course(ccode,cname,tno,startdate,enddate,complete,cperson,maxcnt)
+	VALUES (#{ccode},#{cname},#{tno},#{startdate},#{enddate},#{complete},#{cperson},#{maxcnt})
+	</insert>
+  	
+  	<!-- 과목저장 -->
+	<insert id="insert_subject" >
+	<!-- 리스트 받은걸 포이치문으로 여러건 저장 -->
+	<!-- open : 반복문 전에 -->
+	<!-- close : 반복문이 끝나고 후에 -->
+	<!-- separator : 반복문 사이에 넣을거 -->
+	<!-- collection 안의 jlist를 풀어 jcode가 나오고 그걸 하나씩 sql문에 대입 -->
+		<foreach collection="jlist" item="jcode" index="index" separator=" " open="INSERT ALL" close="SELECT * FROM DUAL">
+			into cousesubject(ccode,jcode) values (#{ccode},#{jcode}) 
+		</foreach>
+	</insert>
+	
+	<select id="selectone" resultType="java.util.Map">
+		SELECT c.*, t.tname, s.jname
+		FROM course c
+		inner join cousesubject cs on (c.ccode = cs.ccode)
+		inner join teacher t on (c.tno = t.tno)
+		inner join subject s on (cs.jcode = s.jcode)
+		WHERE c.ccode = #{ccode}
+	</select>
+  	
+</mapper>

@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.spring.my.BoardMapper">
+	
+	<insert id="insert" parameterType="Board">
+		<selectKey keyProperty="bnum" resultType="int" order="BEFORE">
+			select bseq.nextval from dual
+		</selectKey>
+		insert into board(bnum,userid,subject,content,ip)
+		VALUES (#{bnum},#{userid},#{subject},#{content},#{ip})
+	</insert>
+	
+	<delete id="delete">
+		DELETE FROM board
+		WHERE bnum = #{bnum}
+	</delete>
+	
+	<update id="update">
+		UPDATE board
+		set 
+		subject = #{subject},
+		content =  #{content},
+		ip = #{ip},
+		modifydate = sysdate
+		WHERE bnum = #{bnum}
+	</update>
+	
+	<select id="selectone" resultType="java.util.Map">		
+		SELECT B.*, UM.likegubun
+		FROM board B LEFT JOIN 
+		    (SELECT * FROM usermange
+		      WHERE GUBUN = '1'
+		        AND userid = #{userid}) UM 
+		ON (B.bnum = UM.num)
+		WHERE B.bnum = #{bnum}
+	</select>
+	
+	<sql id="find">
+			<if test="findkey == 'userid'">
+				WHERE userid  like '%' || #{findvalue} || '%'
+			</if>
+			<if test="findkey == 'subject'">
+				WHERE subject  like '%' || #{findvalue} || '%'
+			</if>
+			<if test="findkey == 'content'">
+				WHERE subject  like '%' || #{findvalue} || '%'
+			</if>
+			<if test="findkey == 'subcon'">
+				WHERE content  like '%' || #{findvalue} || '%' or subject like '%' || #{findvalue} || '%'
+			</if>
+	</sql>
+	
+	<select id="selectlist" resultType="Board">
+<!-- 		select * from board
+		<include refid="find"/> -->
+		
+		SELECT b.* FROM
+		    (SELECT ROWNUM  rnum, b.* FROM
+		        (SELECT * FROM board
+		        <include refid="find"/>
+		        order by bnum desc) b ) b
+		where b.rnum BETWEEN #{startnum} and #{endnum}
+	</select>
+	
+	<!-- 전체 게시물 수 -->
+	<select id="selecttotcnt" resultType="int">
+		SELECT count(*) totcnt FROM board
+		<include refid="find"/>
+	</select>
+	
+	<!-- 조회수 +1 -->
+	<update id="readcountadd">
+		UPDATE BOARD
+		SET READCNT = READCNT +1
+		WHERE BNUM = #{bnum}
+	</update>
+	
+	<!-- 좋아요 +1 -->
+	<update id="updatelikecnt">
+		UPDATE BOARD
+		SET likecnt = likecnt +1
+		WHERE BNUM = #{bnum}
+	</update>
+	
+	<!-- 좋아요 -1 -->
+	<update id="updatelikecntcancel">
+		UPDATE BOARD
+		SET likecnt = likecnt -1
+		WHERE BNUM = #{bnum}
+	</update>
+	
+	<!-- 싫어요 +1 -->
+	<update id="updatedislikecnt">
+		UPDATE BOARD
+		SET dislikecnt = dislikecnt +1
+		WHERE BNUM = #{bnum}
+	</update>
+	
+	<!-- 싫어요 -1 -->
+	<update id="updatedislikecntcancel">
+		UPDATE BOARD
+		SET dislikecnt = dislikecnt -1
+		WHERE BNUM = #{bnum}
+	</update>
+	
+	<!-- removeyn : 삭제값 y로 변경 -->
+	<update id="updateremoveyn">
+	
+	</update>
+	
+</mapper>

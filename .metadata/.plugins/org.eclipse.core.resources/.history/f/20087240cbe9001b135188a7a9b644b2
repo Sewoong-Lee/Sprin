@@ -1,0 +1,20 @@
+package org.spring.my.dao;
+
+import org.spring.my.dto.Reply;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public class ReplyDAOimpl implements ReplyDAO{
+	
+	@Autowired
+	
+	
+	
+	@Override
+	public void insert(Reply reply) {
+		// TODO Auto-generated method stub
+		
+	}
+
+}

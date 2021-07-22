@@ -1,0 +1,39 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ include file="../include/includefile.jsp" %>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<h2>게시물 리스트</h2>
+	<form action="${path}/board/list">
+		<select name="findkey">
+			<option value="subject">제목</option>
+			<option value="content">내용</option>
+			<option value="subcon">제목+내용</option>
+			<option value="userid">작성자</option>
+		</select>
+		<input type="text" name="findvalue" maxlength="5">
+		<button>검색</button>
+	</form>
+	<table>
+		<tr>
+			<th>순번</th>
+			<th>작성자</th>
+			<th>제목</th>
+			<th>작성일</th>
+		</tr>
+		<c:forEach var="blist" items="${blist}">
+		<tr>
+			<td>${blist.bnum}</td>
+			<td>${blist.userid}</td>
+			<td>${blist.subject}</td>
+			<td>${blist.regdate}</td>
+		</tr>
+		</c:forEach>
+	</table>
+</body>
+</html>

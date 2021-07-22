@@ -1,0 +1,11 @@
+package org.spring.my.dao;
+
+import java.util.Map;
+
+import org.spring.my.dto.Usermange;
+
+public interface UsermangeDAO {
+	public Usermange selectone(Map<String, Object> findmap);
+	
+	public void update(Usermange usermange);
+}

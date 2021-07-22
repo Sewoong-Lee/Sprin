@@ -1,0 +1,41 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.js"></script>
+<script type="text/javascript">
+	$(function() {
+		$('#btn').click(function() {
+			$.ajax({
+				url:'/my/ajax/04_list',
+				type:'get',
+				data:'',
+				dataType:'List<Item>', 
+				success:function(data){
+					console.log(data);
+
+				},
+				error:function(err){
+					console.log(err);
+					alert('실패');
+				}
+			});
+			
+		});
+	});
+
+
+</script>
+</head>
+<body>
+	<h2>상품 리스트 조회</h2>
+	<button id="btn">조회</button>
+	<div id="itemlist">
+	
+	
+	</div>
+</body>
+</html>

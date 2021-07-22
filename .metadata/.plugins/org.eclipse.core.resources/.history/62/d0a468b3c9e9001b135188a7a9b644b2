@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.spring.my.MemberMapper">
+	
+	<insert id="insert">
+		INSERT INTO member(userid, passwd, email, zip, addr1, addr2, filename, memo)
+		VALUES (#{userid},#{passwd},#{email},#{zip},#{addr1},#{addr2},#{filename},#{memo})
+	</insert>
+
+	<select id="selectone" resultType="org.spring.my.dto.Member">
+		select * from member
+		WHERE userid = #{userid}
+	</select>
+
+</mapper>

@@ -1,0 +1,45 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ include file="../include/includefile.jsp" %>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<h2>게시물 수정</h2>
+	<table>
+		<tr>
+			<th>번호</th>
+			<td> <input name="bnum" type="text" value="${bfmap.board.BNUM}" readonly> </td>
+		</tr>
+		<tr>
+			<th>작성자</th>
+			<td> <input name="userid" type="text" value="${bfmap.board.USERID}" readonly> </td>
+		</tr>
+		<tr>
+			<th>제목</th>
+			<td> <input name="subject" type="text" value="${bfmap.board.SUBJECT}"> </td>
+		</tr>
+		<tr>
+			<th>내용</th>
+			<td> <textarea name="content" rows="5" cols="20">${bfmap.board.CONTENT}</textarea> </td>
+		</tr>
+		<tr>
+			<th>파일</th>
+			<td> <c:forEach var="file" items="${bfmap.bflist}">
+					<img alt="사진" src="${path}/uploadimg/${file.filename}" width="100">
+				</c:forEach> 
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2" align="center"> <button>수정</button> </td>
+		</tr>
+	
+	</table>
+	
+	
+	
+</body>
+</html>

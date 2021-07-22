@@ -1,0 +1,126 @@
+/**
+ * 
+ */
+
+	//좋아요 싫어요 버튼 제어 및 텍스트 변경
+	var likegubun = '${bfmap.board.LIKEGUBUN}';
+	
+	function statechange() {
+		if(likegubun == '0'){
+			$('#btnlike').text('좋아요');
+			$('#btntislike').text('싫어요');
+		}else if(likegubun == '1'){ // 좋아요 선택
+			$('#btnlike').text('좋아요 취소');
+			$('#btntislike').text('싫어요');
+		}else if(likegubun == '2'){
+			$('#btnlike').text('좋아요');
+			$('#btntislike').text('싫어요 취소');
+		};
+	}
+	
+	$(function() {
+		//게시물 처리
+		//좋아요 버튼을 클릭 했다면
+		$('#btnlike').click(function() {
+			alert(likegubun);
+			if(likegubun == '0'){ //조회 상태일때
+				//좋아요 처리
+				//alert('좋아요');
+				var bnum = '${bfmap.board.BNUM}';
+				console.log(bnum);
+				
+				$.ajax({
+					url: '${path}/board/like/'+bnum,
+					type: 'get',
+					dataType: 'text',
+					success: function(data){
+						likegubun = '1'; //좋아요 상태로 변경
+						//alert(data);
+						statechange(); //버튼상태 변경
+						//좋아요 +1
+						$('#likecnt').text(parseInt($('#likecnt').text()) + 1); 
+					},
+					error: function(err){
+						console.log(err);
+						alert('실패');
+					}
+				});
+			}else if(likegubun == '1'){ //좋아요 상태일때
+				//좋아요 취소 처리
+				//좋아요 취소 처리
+				var bnum = '${bfmap.board.BNUM}';
+				console.log(bnum);
+				$.ajax({
+					url:'${path}/board/likecancel/'+bnum,
+					type:'get',
+					dataType:'text',
+					success : function(data){
+						state = '0'; //좋아요 상태
+						statechange(); //버튼상태 변경
+						//좋아요 수 - 1
+						$('#likecnt').text(parseInt($('#likecnt').text()) - 1); 
+						
+					},
+					error:function(err){
+						console.log(err);
+						alert('실패');
+					}
+				});
+				
+			}else if(likegubun == '2'){ //싫어요 취소 진행 메세지
+				alert('싫어요 취소 후 가능');
+			}
+		});
+		
+		//싫어요 버튼을 눌렀을때
+		$('#btntislike').click(function() {
+			alert('싫어요');
+			if(likegubun == '0'){
+				//싫어요 처리
+				var bnum = '${bfmap.board.BNUM}';
+				console.log(bnum);
+				
+				$.ajax({
+					url: '${path}/board/dislike/'+bnum,
+					type: 'get',
+					dataType: 'text',
+					success: function(data){
+						likegubun = '2'; //싫어요 상태로 변경
+						//alert(data);
+						statechange(); //버튼상태 변경
+						//싫어요 +1
+						$('#dislikecnt').text(parseInt($('#dislikecnt').text()) + 1); 
+					},
+					error: function(err){
+						console.log(err);
+						alert('실패');
+					}
+				});
+			}else if(likegubun == '2'){ //싫어요 상태일때
+				//싫어요 취소 처리
+				var bnum = '${bfmap.board.BNUM}';
+				console.log(bnum);
+				$.ajax({
+					url:'${path}/board/dislikecancel/'+bnum,
+					type:'get',
+					dataType:'text',
+					success : function(data){
+						state = '0'; //조회 상태
+						statechange(); //버튼상태 변경
+						//싫어요 수 - 1
+						$('#dislikecnt').text(parseInt($('#dislikecnt').text()) - 1); 
+						
+					},
+					error:function(err){
+						console.log(err);
+						alert('실패');
+					}
+				});
+			}else if(likegubun == '1'){ //싫어요 취소 진행 메세지
+				alert('좋아요 취소 후 가능');
+			}
+		});
+		
+		//***************************************************************************************
+		
+		

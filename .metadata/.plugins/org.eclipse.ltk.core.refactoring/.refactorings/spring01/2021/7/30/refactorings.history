@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename resource &apos;spring01/src/main/webapp/WEB-INF/views/0301_ajax_restfull&apos; to &apos;0301_ajax&apos;" description="Rename resource &apos;0301_ajax_restfull&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="src/main/webapp/WEB-INF/views/0301_ajax_restfull" name="0301_ajax" stamp="1626666724997" updateReferences="true"/>
+</session>

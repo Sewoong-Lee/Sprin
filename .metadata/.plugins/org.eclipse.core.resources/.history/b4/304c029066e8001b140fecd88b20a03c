@@ -1,0 +1,45 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+
+<script type="text/javascript">
+	$(function() {
+		$('#btn').click(function() {
+			$.ajax({
+				url:'/my/ajax/04_list',
+				type:'get',
+				dataType:'list', //리턴받는 값이 json형태
+				success:function(data){
+					console.log(data);
+					console.log(data.userid);
+					//alert(data);
+					
+					$('#info').html('<li>'+data.userid+'</li>');
+					$('#info').append('<li>'+data.name+'</li>');
+					$('#info').append('<li>'+data.passwd+'</li>');
+				},
+				error:function(err){
+					console.log(err);
+					alert('실패');
+				}
+			});
+			
+		});
+	});
+
+
+</script>
+</head>
+<body>
+	<h2>상품 리스트 조회</h2>
+	<button id="btn">조회</button>
+	<div id="itemlist">
+	
+	
+	</div>
+</body>
+</html>

@@ -1,0 +1,12 @@
+package org.spring.my.dao;
+
+import java.util.List;
+
+import org.spring.my.dto.Reply;
+
+public interface ReplyDAO {
+	public void insert(Reply reply);
+	public void updaterestep(Reply reply);
+	public List<Reply> selectlist(int bnum);
+	public void update(Reply reply);
+}

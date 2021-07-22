@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.spring.my.RequestMapper">
+ 	<insert id="insert">
+		INSERT INTO request(ccode,sno)
+		VALUES (#{ccode},#{sno})
+ 	</insert>
+  	
+  	<select id="selectlist" resultType="java.util.Map">
+  		SELECT r.ccode, r.sno, s.SNAME, s.tel
+		from request r  inner join STUDENT s on (r.sno = s.sno)
+		WHERE r.ccode = #{ccode}
+  	</select>
+  	
+</mapper>

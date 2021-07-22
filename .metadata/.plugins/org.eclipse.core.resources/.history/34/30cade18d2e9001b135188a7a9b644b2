@@ -1,0 +1,8 @@
+package org.spring.my.service;
+
+import org.spring.my.dto.Reply;
+
+public interface ReplyService {
+	public void insert(Reply reply);
+	public void updaterestep(Reply reply);
+}

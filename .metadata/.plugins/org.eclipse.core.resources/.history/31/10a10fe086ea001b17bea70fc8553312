@@ -1,0 +1,359 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ include file="../include/includefile.jsp" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<!-- 댓글 리스트 템플릿 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.7/handlebars.min.js"></script>
+<script id="replylist_template" type="text/x-handlebars-template">
+	 {{#each .}}
+     <table>
+		<hr>
+		
+		<table border="1">
+		<tr>
+			<td colspan="2">
+				<button class="btnreplike">좋아요</button> : <span class="replikecnt">{{likecnt}}</span>
+				<button class="btnreptislike">싫어요</button> : <span class="repdislikecnt">{{dislikecnt}}</span>
+			</td>
+		</tr>
+		<tr>
+			<th>작성자</th>
+			<td><input type="text" class="repuserid" readonly value="{{userid}}"></td>
+		</tr>
+		<tr>
+			<th>내용</th>
+			<td><textarea rows="3" cols="20" id="repcontent{{rnum}}">{{content}}</textarea></td>
+		</tr>
+		<tr>
+			<th>등록일자</th>
+			<td><input type="text" class="repregdate" value="{{regdate}}"></td>
+		</tr>
+		<tr>
+			<th>수정일자</th>
+			<td><input type="text" class="repmodifydate" value="{{modifydate}}"></td>
+		</tr>
+		<tr>
+			<td colspan="4" align="center"> 
+				<input type="hidden" class="rnum" value="{{rnum}}">
+				<input type="hidden" class="restep" value="{{restep}}">
+				<input type="hidden" class="relevel" value="{{relevel}}">
+				<button class ="btnrepupdate" value="{{userid}}">수정</button>
+				<button class="btnrepdelete" value="{{userid}}">삭제</button>
+				<button class="btnrepadd">댓글</button>
+			</td>
+		</tr>
+     </table>
+     {{/each}}
+</script>
+<script type="text/javascript">
+	//좋아요 싫어요 버튼 제어 및 텍스트 변경
+	var likegubun = '${bfmap.board.LIKEGUBUN}';
+	
+	function statechange() {
+		if(likegubun == '0'){
+			$('#btnlike').text('좋아요');
+			$('#btntislike').text('싫어요');
+		}else if(likegubun == '1'){ // 좋아요 선택
+			$('#btnlike').text('좋아요 취소');
+			$('#btntislike').text('싫어요');
+		}else if(likegubun == '2'){
+			$('#btnlike').text('좋아요');
+			$('#btntislike').text('싫어요 취소');
+		};
+	}
+	
+	$(function() {
+		//게시물 처리
+		//좋아요 버튼을 클릭 했다면
+		$('#btnlike').click(function() {
+			alert(likegubun);
+			if(likegubun == '0'){ //조회 상태일때
+				//좋아요 처리
+				//alert('좋아요');
+				var bnum = '${bfmap.board.BNUM}';
+				console.log(bnum);
+				
+				$.ajax({
+					url: '${path}/board/like/'+bnum,
+					type: 'get',
+					dataType: 'text',
+					success: function(data){
+						likegubun = '1'; //좋아요 상태로 변경
+						//alert(data);
+						statechange(); //버튼상태 변경
+						//좋아요 +1
+						$('#likecnt').text(parseInt($('#likecnt').text()) + 1); 
+					},
+					error: function(err){
+						console.log(err);
+						alert('실패');
+					}
+				});
+			}else if(likegubun == '1'){ //좋아요 상태일때
+				//좋아요 취소 처리
+				//좋아요 취소 처리
+				var bnum = '${bfmap.board.BNUM}';
+				console.log(bnum);
+				$.ajax({
+					url:'${path}/board/likecancel/'+bnum,
+					type:'get',
+					dataType:'text',
+					success : function(data){
+						state = '0'; //좋아요 상태
+						statechange(); //버튼상태 변경
+						//좋아요 수 - 1
+						$('#likecnt').text(parseInt($('#likecnt').text()) - 1); 
+						
+					},
+					error:function(err){
+						console.log(err);
+						alert('실패');
+					}
+				});
+				
+			}else if(likegubun == '2'){ //싫어요 취소 진행 메세지
+				alert('싫어요 취소 후 가능');
+			}
+		});
+		
+		//싫어요 버튼을 눌렀을때
+		$('#btntislike').click(function() {
+			alert('싫어요');
+			if(likegubun == '0'){
+				//싫어요 처리
+				var bnum = '${bfmap.board.BNUM}';
+				console.log(bnum);
+				
+				$.ajax({
+					url: '${path}/board/dislike/'+bnum,
+					type: 'get',
+					dataType: 'text',
+					success: function(data){
+						likegubun = '2'; //싫어요 상태로 변경
+						//alert(data);
+						statechange(); //버튼상태 변경
+						//싫어요 +1
+						$('#dislikecnt').text(parseInt($('#dislikecnt').text()) + 1); 
+					},
+					error: function(err){
+						console.log(err);
+						alert('실패');
+					}
+				});
+			}else if(likegubun == '2'){ //싫어요 상태일때
+				//싫어요 취소 처리
+				var bnum = '${bfmap.board.BNUM}';
+				console.log(bnum);
+				$.ajax({
+					url:'${path}/board/dislikecancel/'+bnum,
+					type:'get',
+					dataType:'text',
+					success : function(data){
+						state = '0'; //조회 상태
+						statechange(); //버튼상태 변경
+						//싫어요 수 - 1
+						$('#dislikecnt').text(parseInt($('#dislikecnt').text()) - 1); 
+						
+					},
+					error:function(err){
+						console.log(err);
+						alert('실패');
+					}
+				});
+			}else if(likegubun == '1'){ //싫어요 취소 진행 메세지
+				alert('좋아요 취소 후 가능');
+			}
+		});
+		
+		//***************************************************************************************
+		
+		//댓글 처리
+		//댓글 저장
+		//댓글 추가버튼을 클릭 했을때
+		$('#btnrepsave').click(function() {
+			var bnum = ${bfmap.board.BNUM};
+			var content = $('#repcontent').val();
+			var restep = $('#restep').val();
+			var relevel = $('#relevel').val();
+			console.log(bnum+'  '+repcontent+'  '+restep+'  '+relevel);
+			
+			$.ajax({
+				url:'${path}/reply/',  //restfull하게 설계
+				type:'post',  //메소드 방식
+				contentType:'application/json',  //보내는 데이터 타입
+				data:JSON.stringify({bnum,content,restep,relevel}),  //보낼 데이터
+				//dataType:'json', //서버에서 받는 타입
+				dataType:'text', //서버에서 받는 타입
+				success:function(data){
+					console.log(data);
+					//댓글 리스트 조회(아래 댓글리스트 조회 템플릿 펑션)
+					//템플릿 소스 가져오기
+					replylist();
+					
+				},
+				error:function(err){
+					console.log(err);
+					alert('실패');
+				}
+				
+			});
+		});
+		//댓글리스트 조회
+		function replylist() {
+			var bnum = ${bfmap.board.BNUM};
+			$.ajax({
+				url:'${path}/reply/list/'+bnum,  //restfull하게 설계
+				type:'get',  //메소드 방식
+				dataType:'json', //서버에서 받는 타입
+				success:function(data){
+					//console.log(data);
+					//댓글리스트 탬플릿을 이용해서 추가
+					var source = $('#replylist_template').html();
+					var template = Handlebars.compile(source);
+			        $('#replist').html(template(data));
+				},
+				error:function(err){
+					console.log(err);
+					alert('실패');
+				}
+			});
+		};
+		//폼이 로딩이 완료된 후
+		replylist();
+		
+		//댓글 버튼을 클릭 했을때
+		//동적으로 생성된 엘리멘트에 이벤트 달기
+		$('#replist').on('click','.btnrepadd',function(){
+			//alert('댓글 클');
+			var restep = $(this).parent().find('.restep').val();
+			var relevel = $(this).parent().find('.relevel').val();
+			console.log(restep +' '+relevel);
+			
+			$('#restep').val(restep);
+			$('#relevel').val(relevel);
+		});
+		
+		//원본의 댓글을 클릭 했을때 (0,0 으로 고정)
+		$('#btnrepadd').click(function(){
+			$('#restep').val(0);
+			$('#relevel').val(0);
+		});
+		
+		//댓글 수정
+		$('#replist').on('click','.btnrepupdate',function(){
+			//var content = $(this).parent().parent().parent().find('.repcontent').val();
+			var userid = $(this).val();
+			//alert(userid);
+			//권한 체그
+			if('${sessionScope.userid}' != userid){
+				alert('작성자와 달라요');
+				return;
+			};
+			var rnum = $(this).parent().find('.rnum').val();
+			var content = $('#repcontent'+rnum).val();
+			//alert(content);
+			$.ajax({
+				url:'${path}/reply/'+rnum,  //restfull하게 설계
+				type:'put',  //메소드 방식 (수정은 put)
+				contentType:'application/json',  //보내는 데이터 타입
+				data:JSON.stringify({rnum, content}),  //보낼 데이터
+				//dataType:'json', //서버에서 받는 타입
+				dataType:'text', //서버에서 받는 타입
+				success:function(data){
+					console.log(data);
+					alert(data);
+				},
+				error:function(err){
+					console.log(err);
+					alert('실패');
+				}
+			});
+		});
+		
+		//댓글 삭제
+		$('#replist').on('click','.btnrepdelete',function(){
+			//var content = $(this).parent().parent().parent().find('.repcontent').val();
+			var userid = $(this).val();
+			alert(userid);
+			//삭제 권한 체크
+			if('${sessionScope.userid}' != userid){
+				alert('작성자와 달라요');
+				return;
+			};
+			var rnum = $(this).parent().find('.rnum').val();
+			$.ajax({
+				url:'${path}/reply/delete'+rnum,  //restfull하게 설계
+				type:'delete',  //메소드 방식 (수정은 put)
+				//contentType:'application/json',  //보내는 데이터 타입
+				//data:JSON.stringify({rnum, content}),  //보낼 데이터
+				//dataType:'json', //서버에서 받는 타입
+				dataType:'text', //서버에서 받는 타입
+				success:function(data){
+					//console.log(data);
+					alert(data);
+					replylist();
+				},
+				error:function(err){
+					console.log(err);
+					alert('실패');
+				}
+			});
+		});
+		
+		
+	});
+
+
+</script>
+</head>
+<body>	
+	세션 ${sessionScope.userid} <br>
+	좋아요 구분 : ${bfmap.board.LIKEGUBUN}
+	<h2>상세 조회</h2>
+	순번 : <a >${bfmap.board.BNUM}</a> <br>
+	조회수 : ${bfmap.board.READCNT} <br>
+	<button id="btnlike">좋아요</button> : <span id="likecnt">${bfmap.board.LIKECNT}</span>
+	<button id="btntislike">싫어요</button> : <span id="dislikecnt">${bfmap.board.DISLIKECNT}</span> <br>
+	작성일 : <fmt:formatDate value="${bfmap.board.REGDATE}" pattern="yyyy-MM-dd HH:mm" /> <br>
+	최근수정일 : <fmt:formatDate value="${bfmap.board.MODIFYDATE}" pattern="yyyy-MM-dd HH:mm" /> <br>
+	작성자 : ${bfmap.board.USERID} <br>
+	제목 : ${bfmap.board.SUBJECT} <br>
+	내용 : <textarea rows="5" cols="10" name="content" id="content">${bfmap.board.CONTENT}</textarea><br>
+
+	파일 : 
+	<c:forEach var="file" items="${bfmap.bflist}">
+		<img alt="사진" src="${path}/uploadimg/${file.filename}" width="100">
+	</c:forEach>
+	<button>수정</button>
+	<button>삭제</button>
+	<button id="btnrepadd">댓글</button>
+	<hr>
+	<!-- 댓글 추가 -->
+	<h3>댓글</h3>
+	<div>
+		<!-- 글 순서 --><input type="hidden" id="restep" value="0">
+		<!-- 글 순서 --><input type="hidden" id="relevel" value="0">
+		작성자 : <input type="text" id="repuserid" readonly value="www"> <br>
+		내용 : <textarea rows="3" cols="20" id="repcontent"></textarea>
+		<button id="btnrepsave">저장</button>
+		<button type="reset">취소</button>
+	</div>
+	<!-- 댓글 리스트 -->
+	<%-- ${replylist} --%>
+	<div id="replist">
+		
+		
+	</div>
+	
+	
+	
+	
+	
+	
+</body>
+</html>
