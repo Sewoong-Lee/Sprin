@@ -26,4 +26,10 @@ public class FileDAOimpl implements FileDAO{
 		return SqlSession.selectList("org.spring.my.BoaedFileMapper.selectlist", bnum);
 	}
 
+	@Override
+	public void delete(int fnum) {
+		SqlSession.selectList("org.spring.my.BoaedFileMapper.delete", fnum);
+		
+	}
+
 }

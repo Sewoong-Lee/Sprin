@@ -33,42 +33,19 @@ public class BoardServiceimpl implements BoardService{
 	//트랜잭션으로 파일에서 에러가 나면 내용까지 인서트 막음
 	@Transactional
 	@Override
-	public void insert(Board board) {
+	public void insert(Board board) throws Exception{
 		//게시물 저장
 		boarddao.insert(board);//인서트를 하고나면 저장 후 bnum이 셋팅완료
 		
-		//매퍼에게 전달할 맵
-		Map<String, Object> fmap = new HashMap<>();
-		
-		//파일맵에 bnum저장
-		fmap.put("bnum", board.getBnum());
-		
-		//파일이름 리스트 만들기
-		List<String> filenamelist = new ArrayList<>();
-		
 		//board디티오의 파일 이름 저장
-		List<MultipartFile> files= board.getFiles();
-		//만약 files가 널이라면(파일 추가 인풋창을 다 날리면) 리턴
-		if(files == null) return ;
+		//List<MultipartFile> files= board.getFiles();
 		
-		for(MultipartFile mf :files) {
-			//파일 업로드 저장
-			String filename = fileservice.fileupload(mf);
-			
-			//파일 네임이 공백이 아닐때만 추가해라
-			if(!filename.equals("")) {
-				filenamelist.add(filename);
-			}
-		}
-		//filenamelist의 사이즈가 0이면 돌아가라
-		if(filenamelist.size() == 0) return ;
-		fmap.put("filenamelist", filenamelist);
-		//System.out.println(fmap);
-		fileservice.insertboardfile(fmap);
+		//파일을 업로드 하고 db에 저장(변환 안하고 보드 파일스 그냥 넘김)
+		fileservice.insertdoardfilelist(board.getFiles(), board.getBnum());
 	}
 
 	@Override
-	public List<Board> selectlist(Page page) {
+	public List<Map<String,Object>> selectlist(Page page) throws Exception{
 		//**페이지 값 구하기
 		//전체 게시물 수 구하기
 		int totcnt = boarddao.selecttotcnt(page);
@@ -101,7 +78,7 @@ public class BoardServiceimpl implements BoardService{
 	}
 
 	@Override
-	public Map<String, Object> selectone(int bnum, String userid) {
+	public Map<String, Object> selectone(int bnum, String userid) throws Exception{
 		//게시물 한건 조회
 		Map<String, Object> findmap = new HashMap<String, Object>();
 		findmap.put("bnum", bnum);
@@ -121,7 +98,7 @@ public class BoardServiceimpl implements BoardService{
 	//조회수 +1
 	@Transactional  //트랜잭션 걸어줌
 	@Override
-	public void readcountadd(int bnum, String userid) {
+	public void readcountadd(int bnum, String userid) throws Exception{
 		//유저매니저 테이블에 데이터가 없다면 인서트 (중복조회수 방지)
 		Usermange usermange = new Usermange();
 		usermange.setGubun("1"); //1: 게시글 2:댓글
@@ -129,18 +106,20 @@ public class BoardServiceimpl implements BoardService{
 		usermange.setUserid(userid);  //회원 아이디
 		usermange.setLikegubun("0");  //0:조회, 1:좋아요, 2:싫어요
 		
-		if(usermangedao.selectone(usermange) == null) {
-			//기존에 조회 정보가 없다면 매니져테이블에 인서트 및 조회 +1 
-			usermangedao.insert(usermange);
-			boarddao.readcountadd(bnum);
-		}
+//		if(usermangedao.selectone(usermange) == null) {
+//			//기존에 조회 정보가 없다면 매니져테이블에 인서트 및 조회 +1 
+//			usermangedao.insert(usermange);
+//			boarddao.readcountadd(bnum);
+//		}
+		//위 내용을 프로시저 한번으로 변경
+		usermangedao.pUpdateReadCnt(usermange);
 		
 	}
 	
 	//좋아요+1
 	@Transactional  //트랜잭션 걸어줌
 	@Override
-	public void updatelikecnt(int bnum, String userid) {
+	public void updatelikecnt(int bnum, String userid) throws Exception{
 		//1)board의 likecnt +1
 		boarddao.updatelikecnt(bnum);
 		
@@ -157,7 +136,7 @@ public class BoardServiceimpl implements BoardService{
 	//좋아요 취소
 	@Transactional  //트랜잭션 걸어줌
 	@Override
-	public void updatelikecntcancel(int bnum, String userid) {
+	public void updatelikecntcancel(int bnum, String userid) throws Exception{
 		//1)board =>likecnt - 1
 		boarddao.updatelikecntcancel(bnum);
 				
@@ -175,7 +154,7 @@ public class BoardServiceimpl implements BoardService{
 	//싫어요 +1
 	@Transactional  //트랜잭션 걸어줌
 	@Override
-	public void updatedislikecnt(int bnum, String userid) {
+	public void updatedislikecnt(int bnum, String userid) throws Exception{
 		//1)board의 dislikecnt +1
 		boarddao.updatedislikecnt(bnum);
 		
@@ -193,7 +172,7 @@ public class BoardServiceimpl implements BoardService{
 	//싫어요 취소
 	@Transactional  //트랜잭션 걸어줌
 	@Override
-	public void updatedislikecntcancel(int bnum, String userid) {
+	public void updatedislikecntcancel(int bnum, String userid) throws Exception{
 		//1)board =>likecnt - 1
 		boarddao.updatedislikecntcancel(bnum);
 					
@@ -209,9 +188,33 @@ public class BoardServiceimpl implements BoardService{
 	}
 
 	@Override
-	public void updateremoveyn(int bnum) {
+	public void updateremoveyn(int bnum) throws Exception{
 		
 		boarddao.updateremoveyn(bnum);
+	}
+	
+	//게시물 수정
+	@Transactional
+	@Override
+	public void update(Board board, List<Integer> filedeletelist) throws Exception{
+		//게시물 수정
+		boarddao.update(board);
+		
+		//기존 파일 삭제 
+		//널체크
+		if(filedeletelist != null) {
+			//삭제
+			for(int fnum : filedeletelist) {
+				filedao.delete(fnum);
+			}
+		}
+		
+		// 파일 추가
+		//board디티오의 파일 이름 저장
+		//List<MultipartFile> files= board.getFiles();
+		//파일을 업로드 하고 db에 저장
+		fileservice.insertdoardfilelist(board.getFiles(), board.getBnum());
+		
 	}
 	
 	

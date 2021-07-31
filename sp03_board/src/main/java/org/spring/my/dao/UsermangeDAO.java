@@ -10,5 +10,6 @@ public interface UsermangeDAO {
 	public void insert(Usermange usermange);
 	
 	public void update(Usermange usermange);
-
+	
+	public void pUpdateReadCnt(Usermange usermange);
 }

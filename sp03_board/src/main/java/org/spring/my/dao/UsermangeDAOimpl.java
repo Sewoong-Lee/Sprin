@@ -31,6 +31,12 @@ public class UsermangeDAOimpl implements UsermangeDAO{
 		
 	}
 
+	@Override
+	public void pUpdateReadCnt(Usermange usermange) {
+		SqlSession.update("org.spring.my.UsermangeMapper.pUpdateReadCnt", usermange);
+		
+	}
+
 	
 	
 }

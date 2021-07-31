@@ -7,27 +7,27 @@ import org.spring.my.dto.Board;
 import org.spring.my.dto.Page;
 
 public interface BoardDAO {
-	public void insert(Board board);
+	public void insert(Board board) throws Exception;
 	
-	public void delete(int bnum);
+	public void delete(int bnum) throws Exception;
 	
-	public void update(Board board);
+	public void update(Board board) throws Exception;
 	
-	public Map<String, Object> selectone(Map<String, Object> findmap);
+	public Map<String, Object> selectone(Map<String, Object> findmap) throws Exception;
 	
-	public List<Board> selectlist(Page page);
+	public List<Map<String,Object>> selectlist(Page page) throws Exception;
 
-	public int selecttotcnt(Page page);
+	public int selecttotcnt(Page page) throws Exception;
 
-	public void readcountadd(int bnum);
+	public void readcountadd(int bnum) throws Exception;
 	
-	public void updatelikecnt(int bnum);
+	public void updatelikecnt(int bnum) throws Exception;
 
-	public void updatelikecntcancel(int bnum);
+	public void updatelikecntcancel(int bnum) throws Exception;
 
-	public void updatedislikecnt(int bnum);
+	public void updatedislikecnt(int bnum) throws Exception;
 
-	public void updatedislikecntcancel(int bnum);
+	public void updatedislikecntcancel(int bnum) throws Exception;
 
-	public void updateremoveyn(int bnum);
+	public void updateremoveyn(int bnum) throws Exception;
 }

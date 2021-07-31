@@ -47,6 +47,7 @@
 		<button id="btndelete">삭제</button>
 	</c:if>
 	<button id="btnrepadd">댓글</button>
+	<button id="btnlistmove">리스트로 가즈아~~~~</button>
 	<hr id="rep0">
 	<!-- 댓글 추가 -->
 	<h3>댓글</h3>

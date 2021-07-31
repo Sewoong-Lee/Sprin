@@ -10,13 +10,15 @@ import org.spring.my.dto.Member;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class MemberServiceimpl implements MemberService{
 	
 	private static final Logger logger = LoggerFactory.getLogger(MemberService.class);
-	
+	@Autowired
+	MailSendService mailSendService;
 	@Autowired
 	private MemberDAO memberdao;
 	@Autowired
@@ -25,9 +27,10 @@ public class MemberServiceimpl implements MemberService{
 	//암호화위해서 자동주입(DI)
 	@Autowired
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
-
+	
+	@Transactional
 	@Override
-	public Map<String, Object> insert(Member member, MultipartFile file1) {
+	public Map<String, Object> insert(Member member, MultipartFile file1) throws Exception {
 		//중복 아이디 체크
 		Map<String, Object> rmap = new HashMap<>();
 		//rcode값
@@ -57,9 +60,14 @@ public class MemberServiceimpl implements MemberService{
 		member.setPasswd(bpasswd);
 			
 		logger.info(member.toString());
-			
+		
+		//3) db저장
 		memberdao.insert(member);
 		
+		//4)확인 이메일 전송
+		String autoCode = mailSendService.sendAuthMail(member.getEmail(), member.getUserid());
+		
+		rmap.put("autoCode", autoCode);
 		rmap.put("rcode", 0);
 		rmap.put("msg", "회원가입 완료");
 		
@@ -72,6 +80,7 @@ public class MemberServiceimpl implements MemberService{
 		//0:로그인 완료 (정상회원)
 		//1:아이디 없음
 		//2:비밀번호 불일치
+		//3:이메일 미인증
 		int rcode = 0;
 		String msg = null;
 		//셀렉트원으로 회원 조회
@@ -81,8 +90,12 @@ public class MemberServiceimpl implements MemberService{
 			msg = "아이디가 존재하지 않습니다.";
 			rcode = 1;
 		}else {
-			//비밀번호 체크(데이터베이스의 비밀번호가 뒤에 있어야함)
-			if(bCryptPasswordEncoder.matches(passwd, member.getPasswd())) {
+			//이메일 체크
+			if(!member.getEmailauth().equals("1")) {  //이메일 인증을 아직 안헀다면
+				msg = "이메일 인증을 해주세요";
+				rcode = 3;
+			}else if(bCryptPasswordEncoder.matches(passwd, member.getPasswd())) {
+				//비밀번호 체크(데이터베이스의 비밀번호가 뒤에 있어야함)
 				msg = "로그인 완료";
 				rcode = 0;
 			}else {
@@ -99,6 +112,12 @@ public class MemberServiceimpl implements MemberService{
 	public Member selectone(String userid) {
 		
 		return memberdao.selectone(userid);
+	}
+
+	@Override
+	public void emailauth(String userid) {
+		memberdao.emailauth(userid);
+		
 	}
 	
 	

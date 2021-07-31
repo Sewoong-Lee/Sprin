@@ -36,7 +36,8 @@
 	<form action="${path}/login" name="loginform" method="post">
 	아이디 <input type="text" name="userid" id="userid"> <br>
 	비밀번호 <input type="password" name="passwd" id="passwd"> <br>
-	<button id="btn" type="button">확인</button>
+	<button id="btn" type="button">로그인</button>
+	 <a href="${apiURL}"><img alt="" src="${path}/resources/images/btnGnaver.png" height="30"></a>
 	</form>
 </body>
 </html>

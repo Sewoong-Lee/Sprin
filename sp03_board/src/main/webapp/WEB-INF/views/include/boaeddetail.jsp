@@ -9,7 +9,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.7/handlebars.min.js"></script>
 <!-- 댓글 탬플릿 소스 -->
 <script id="replylist_template" type="text/x-handlebars-template">
-	 {{#each .}}
+	{{#each .}}
      <table>
 		<hr>
 		<table border="1" id="rep{{RNUM}}">
@@ -42,7 +42,7 @@
 				<input type="hidden" class="restep" value="{{RESTEP}}">
 				<input type="hidden" class="relevel" value="{{RELEVEL}}">
 				
-				{{#sessionCheck userid}}				
+				{{#sessionCheck USERID}}				
 				{{/sessionCheck}}
 				<button class="btnrepadd">댓글</button>
 			</td>
@@ -232,6 +232,10 @@ $(function() {
 		location.href='${path}/board/modify?bnum=${bfmap.board.BNUM}';	
 	});
 	
+	//(리스트로 가즈아 버튼 클릭시) 조회폼으로 이동
+	$('#btnlistmove').click(function() {
+		location.href='${path}/board/list';	
+	});
 	
 	
 	//***************************************************************************************

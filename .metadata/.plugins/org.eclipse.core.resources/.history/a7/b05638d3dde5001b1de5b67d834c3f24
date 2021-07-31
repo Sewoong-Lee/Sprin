@@ -1,6 +1,0 @@
-package org.spring.my.dto;
-
-public class Page {
-	private String findkey;
-	private String findvalue;
-}

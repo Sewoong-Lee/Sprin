@@ -9,4 +9,6 @@ public interface FileDAO {
 	public void insertboardfile(Map<String, Object> fmap);
 
 	public List<Boardfile> selectlist(int bnum);
+	
+	public void delete(int fnum);
 }

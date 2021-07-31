@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ include file="../include/includefile.jsp" %>
 <!-- contextpath 변수 생성 -->
 <c:set var="path" value="${pageContext.request.contextPath}"/>
 <!DOCTYPE html>
@@ -51,6 +52,8 @@ function jusoCallBack(roadAddrPart1,addrDetail, zipNo){
 			var email = $('#email').val();
 			var zip = $('#zip').val();
 			var addr2 = $('#addr2').val();
+			var idchack = $('#idchack').val();
+			var emailchack = $('#emailchack').val();
 			//var useok = $('#useok').val(); //사용가능 학번 확인 여부
 			//alert(sno);
 			if(userid == ''){
@@ -59,6 +62,10 @@ function jusoCallBack(roadAddrPart1,addrDetail, zipNo){
 				alert('비밀번호 입력');
 			}else if(email == ''){
 				alert('이메일 입력');
+			}else if(idchack != '0'){
+				alert('아이디 중복체크 확인');
+			}else if(emailchack != '0'){
+				alert('이메일 체크 확인');
 			}else{
 				frmstudentadd.submit();
 			}
@@ -75,18 +82,78 @@ function jusoCallBack(roadAddrPart1,addrDetail, zipNo){
 			goPopup();
 		});
 		
+		$('#idchackbtn').click(function() {
+			//e.preventDefault(); //기본 이벤트 제거
+			var userid = $('#userid').val();
+			//alert(userid);
+			
+			$.ajax({
+				url: '${path}/member/idchack/'+userid,
+				type: 'get',
+				dataType: 'text',
+				success: function(data){
+					//alert(data);
+					if(data == '0'){
+						alert("사용 가능 아이디");
+						$('#idchack').val(0);
+					}else{
+						alert("중복 아이디");
+						$('#idchack').val(1);
+					}
+				},
+				error: function(err){
+					alert('실패');
+				}
+			});
+			
+		});
+		//아이디변경시 
+		$('#userid').change(function() {
+			$('#idchack').val('1');
+		});
+		
+		//이메일 인증 클릭시
+		$('#emailchackbtn').click(function() {
+			//e.preventDefault(); //기본 이벤트 제거
+			var email = $('#email').val();
+			var userid = $('#userid').val();
+			//alert(userid);
+			if(userid == ''){
+				alert('아이디를 먼저 체크 해주세요.');
+				return;
+			}
+			
+			$.ajax({
+				url: '${path}/member/emailchack/',
+				type: 'get',
+				data:{userid,email},
+				dataType: 'text',
+				success: function(data){
+					window.open('https://www.naver.com/','_blank'); //새창 띄우기
+					$('#emailchack').val(0);
+				},
+				error: function(err){
+					alert('실패');
+				}
+			});
+			
+		});
+		
 	});
 	 
 	
 </script>
 </head>
 <body>
+<%@ include file="../header.jsp" %>
 	<h2>회원가입</h2>
+	<!-- 아이디 중복체크 확인 --><input type="hidden" id="idchack">
+	<!-- 아이디 중복체크 확인 --><input type="hidden" id="emailchack">
 	<!-- 파일 전송하기위한 설정 : method="post" enctype="multipart/form-data"-->
 	<form action="${path}/member/join" method="post" enctype="multipart/form-data" name="frmstudentadd">
-	아이디 <input type="text" name="userid" id="userid"> <br>
+	아이디 <input type="text" name="userid" id="userid"> <button type="button" id="idchackbtn">중복 확인</button> <br>
+	이메일 <input type="email" name="email" id="email">  <button type="button" id="emailchackbtn">이메일 인증</button> <br>
 	비밀번호 <input type="text" name="passwd" id="passwd"> <br>
-	이메일 <input type="email" name="email" id="email"> <br>
 	우편번호 <input type="text" name="zip" size="5" id="zip"> <button type="button" id="findaddr">우편번호 찾기</button> <br> 
 	주소 <input type="text" name="addr1" id="addr1"> <br>
 	상세주소 <input type="text" name="addr2" id="addr2"> <br>

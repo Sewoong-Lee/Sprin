@@ -1,5 +1,7 @@
 package org.spring.my.dao;
 
+import java.util.Map;
+
 import org.apache.ibatis.session.SqlSession;
 import org.spring.my.dto.Member;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,19 @@ public class MemberDAOimpl implements MemberDAO{
 	public Member selectone(String userid) {
 		// TODO Auto-generated method stub
 		return SqlSession.selectOne("org.spring.my.MemberMapper.selectone", userid);
+	}
+
+	@Override
+	public void emailauth(String userid) {
+		SqlSession.update("org.spring.my.MemberMapper.emailauth", userid);
+		
+	}
+	
+	//네이버로 간편가입시 회원 등록
+	@Override
+	public void insertnaver(Map<String, String> rsmap) {
+		SqlSession.update("org.spring.my.MemberMapper.insertnaver", rsmap);
+		
 	}
 	
 	

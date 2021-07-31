@@ -50,13 +50,14 @@
 </script>
 </head>
 <body>
+<%@ include file="../header.jsp" %>
 	<h2>게시물 등록</h2>
 	<%-- ${sessionScope.userid} --%>
 	<form action="${path}/board/add" method="post" name="addform" enctype="multipart/form-data">
 		<table>
 			<tr>
 				<th>작성자 아이디</th>
-				<td> <input type="text" name="userid" id="userid" value="ddd" readonly> </td>
+				<td> <input type="text" name="userid" id="userid" value="${sessionScope.userid}" readonly> </td>
 			</tr>
 			<tr>
 				<th>제목</th>

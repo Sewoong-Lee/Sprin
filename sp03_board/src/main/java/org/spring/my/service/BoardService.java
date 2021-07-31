@@ -8,22 +8,24 @@ import org.spring.my.dto.Page;
 
 public interface BoardService {
 
-	public void insert(Board board);
+	public void insert(Board board) throws Exception;
 
-	public List<Board> selectlist(Page page);
+	public List<Map<String,Object>> selectlist(Page page) throws Exception;
 
-	public Map<String, Object> selectone(int bnum, String userid);
+	public Map<String, Object> selectone(int bnum, String userid) throws Exception;
 
-	public void readcountadd(int bnum, String userid);
+	public void readcountadd(int bnum, String userid) throws Exception;
 	
-	public void updatelikecnt(int bnum, String userid);
+	public void updatelikecnt(int bnum, String userid) throws Exception;
 	
-	public void updatelikecntcancel(int bnum, String userid);
+	public void updatelikecntcancel(int bnum, String userid) throws Exception;
 
-	public void updatedislikecnt(int bnum, String userid);
+	public void updatedislikecnt(int bnum, String userid) throws Exception;
 
-	void updatedislikecntcancel(int bnum, String userid);
+	void updatedislikecntcancel(int bnum, String userid) throws Exception;
 
-	public void updateremoveyn(int bnum);
+	public void updateremoveyn(int bnum) throws Exception;
+
+	public void update(Board board, List<Integer> filedeletelist) throws Exception;
 
 }

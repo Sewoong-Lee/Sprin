@@ -25,5 +25,11 @@
 		and userid = #{userid}
 	</update>
 	
+	<!-- 	프로시저 호출
+	1)게시물 조회수+1
+	2)usermanager테이블에 insert -->
+	<update id="pUpdateReadCnt">
+		CALL P_UPDATE_READ_CNT(#{gubun},#{num}, #{userid}, #{likegubun})
+	</update>
 	
 </mapper>

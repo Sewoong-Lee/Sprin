@@ -10,6 +10,9 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.js"></script>
+<!-- <script src="https://kit.fontawesome.com/5bbe282217.js" crossorigin="anonymous"></script> --><!-- 폰트어썸 -->
+<%-- <link href="${path}/resources/css/style.css" rel="stylesheet" type="text/css"> --%><!-- 리소스폴더의 css파일 -->
+<link href="${path}/resources/css/style.css" rel="stylesheet" type="text/css"><!-- 리소스폴더의 css파일 -->
 </head>
 <body>
 

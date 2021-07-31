@@ -40,6 +40,8 @@
 </script>
 </head>
 <body>
+<%@ include file="../header.jsp" %>
+<%-- ${blist} --%>
 	<h2>게시물 리스트</h2>
 	<form action="${path}/board/list">
 		<select name="findkey" id="findkey">
@@ -49,6 +51,7 @@
 			<option value="userid" ${page.findkey == 'userid' ? 'selected' : ''}>작성자</option>
 		</select>
 		<input type="text" name="findvalue" maxlength="10" value="${page.findvalue}" id="findvalue">
+		<input type="hidden" name="curpage" value="1"><!-- 세션에 현재 페이지의 값이 저장되어 조회를 할 경우에 현재 페이지 초기화 -->
 		<button>검색</button>
 	</form>
 	<table>
@@ -63,13 +66,13 @@
 		</tr>
 		<c:forEach var="blist" items="${blist}">
 		<tr>
-			<td>${blist.bnum}</td>
-			<td>${blist.userid}</td>
-			<td> <a href="${blist.bnum}" class="asubject">${blist.subject}</a> </td>
-			<td>${blist.readcnt}</td>
-			<td>${blist.likecnt}</td>
-			<td>${blist.dislikecnt}</td>
-			<td><fmt:formatDate value="${blist.regdate}" pattern="yyyy.MM.dd" /></td>
+			<td>${blist.BNUM}</td>
+			<td>${blist.USERID}</td>
+			<td> <a href="${blist.BNUM}" class="asubject">${blist.SUBJECT} (${blist.RCNT}) </a> </td>
+			<td>${blist.READCNT}</td>
+			<td>${blist.LIKECNT}</td>
+			<td>${blist.DISLIKECNT}</td>
+			<td><fmt:formatDate value="${blist.REGDATE}" pattern="yyyy.MM.dd" /></td>
 		</tr>
 		</c:forEach>
 	</table>
@@ -79,7 +82,12 @@
 	</c:if>
 	
 	<c:forEach var="i" begin="${page.startpage}" end="${page.endpage}">
-		<a href="${i}" class="alist">  ${i}  </a>
+		<c:if test="${page.curpage==i}">
+			<a href="${i}" class="alist" id="acurpage">  ${i}  </a>
+		</c:if>
+		<c:if test="${page.curpage!=i}">
+			<a href="${i}" class="alist">  ${i}  </a>
+		</c:if>
 	</c:forEach>
 	
 	<c:if test="${page.totpage > page.endpage}">

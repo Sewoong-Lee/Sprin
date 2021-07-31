@@ -5,6 +5,7 @@ import java.util.Map;
 import javax.servlet.http.HttpSession;
 
 import org.spring.my.service.MemberService;
+import org.spring.my.service.NaverService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,6 +18,8 @@ public class HomeController {
 	
 	@Autowired
 	private MemberService memberservice;
+	@Autowired
+	private NaverService naverService;
 	
 	//메인으로 이동
 	@RequestMapping("/")
@@ -26,8 +29,12 @@ public class HomeController {
 	
 	//로그인 폼으로
 	@GetMapping("login") 
-	public void login() {
-				
+	public void login(HttpSession session,Model model) throws Exception {
+		//네이버 로그인 api url 생성
+		Map<String, String> nmap = naverService.getapiURL();
+		
+		session.setAttribute("state", nmap.get("state"));
+		model.addAttribute("apiURL", nmap.get("apiURL"));
 	}
 		
 	//로그인

@@ -22,52 +22,52 @@ public class btest {
 	@Autowired
 	private BoardDAO boarddao;
 	
-	@Test
-	public void testinsert() {
-		Board board = new Board();
-		board.setUserid("ddd");
-		board.setSubject("테스트 제목");
-		board.setContent("테스트 내용");
-		board.setIp("192.111.1.100");
-		
-		boarddao.insert(board);
-	}
-	
-	@Test
-	public void testdelete() {
-		int bnum = 3;
-		
-		boarddao.delete(bnum);
-	}
-	
-	@Test
-	public void testupdate() {
-		Board board = new Board();
-		board.setBnum(1);
-		board.setSubject("test22");
-		board.setContent("test22");
-		board.setIp("192.111.1.100");
-		
-		boarddao.update(board);
-	}
-	
-	@Test
-	public void testselectlist() {
-		
-//		List<Board> blist = boarddao.selectlist();
+//	@Test
+//	public void testinsert() {
+//		Board board = new Board();
+//		board.setUserid("ddd");
+//		board.setSubject("테스트 제목");
+//		board.setContent("테스트 내용");
+//		board.setIp("192.111.1.100");
 //		
-//		System.out.println(blist);
-//		//null이 아닐때 성공
-//		assertNotNull(blist);
-	}
-	
-	/*
-	 * @Test public void testselectone() { int bnum = 4; Board board =
-	 * boarddao.selectone(bnum);
-	 * 
-	 * System.out.println(board); }
-	 */
-	
+//		boarddao.insert(board);
+//	}
+//	
+//	@Test
+//	public void testdelete() {
+//		int bnum = 3;
+//		
+//		boarddao.delete(bnum);
+//	}
+//	
+//	@Test
+//	public void testupdate() {
+//		Board board = new Board();
+//		board.setBnum(1);
+//		board.setSubject("test22");
+//		board.setContent("test22");
+//		board.setIp("192.111.1.100");
+//		
+//		boarddao.update(board);
+//	}
+//	
+//	@Test
+//	public void testselectlist() {
+//		
+////		List<Board> blist = boarddao.selectlist();
+////		
+////		System.out.println(blist);
+////		//null이 아닐때 성공
+////		assertNotNull(blist);
+//	}
+//	
+//	/*
+//	 * @Test public void testselectone() { int bnum = 4; Board board =
+//	 * boarddao.selectone(bnum);
+//	 * 
+//	 * System.out.println(board); }
+//	 */
+//	
 	
 	
 	

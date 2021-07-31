@@ -45,23 +45,36 @@
 				WHERE subject  like '%' || #{findvalue} || '%'
 			</if>
 			<if test="findkey == 'content'">
-				WHERE subject  like '%' || #{findvalue} || '%'
+				WHERE content  like '%' || #{findvalue} || '%'
 			</if>
 			<if test="findkey == 'subcon'">
 				WHERE content  like '%' || #{findvalue} || '%' or subject like '%' || #{findvalue} || '%'
 			</if>
 	</sql>
 	
-	<select id="selectlist" resultType="Board">
+	<select id="selectlist" resultType="java.util.Map">
 <!-- 		select * from board
 		<include refid="find"/> -->
 		
-		SELECT b.* FROM
+<!-- 		SELECT b.* FROM
 		    (SELECT ROWNUM  rnum, b.* FROM
 		        (SELECT * FROM board
 		        <include refid="find"/>
 		        order by bnum desc) b ) b
+		where b.rnum BETWEEN #{startnum} and #{endnum} -->
+		<!-- 댓글 개수 추가 -->
+		SELECT b.* FROM
+		    (SELECT ROWNUM  rnum, b.* FROM
+		        (SELECT b.*, NVL(r.rcnt,0) rcnt
+					FROM board b left join
+				(SELECT bnum, COUNT(*) rcnt
+					from reply
+					group by bnum) r
+				on (b.bnum = r.bnum)
+				<include refid="find"/>
+				order by b.bnum desc) b ) b
 		where b.rnum BETWEEN #{startnum} and #{endnum}
+		
 	</select>
 	
 	<!-- 전체 게시물 수 -->

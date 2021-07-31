@@ -16,74 +16,74 @@ public class BoardDAOimpl implements BoardDAO{
 	private SqlSession SqlSession;
 	
 	@Override
-	public void insert(Board board) {
+	public void insert(Board board) throws Exception{
 		SqlSession.insert("org.spring.my.BoardMapper.insert", board);
 		
 	}
 
 	@Override
-	public void delete(int bnum) {
+	public void delete(int bnum) throws Exception{
 		SqlSession.delete("org.spring.my.BoardMapper.delete", bnum);
 		
 	}
 
 	@Override
-	public void update(Board board) {
+	public void update(Board board) throws Exception{
 		SqlSession.update("org.spring.my.BoardMapper.update", board);
 		
 	}
 
 	@Override
-	public Map<String, Object> selectone(Map<String, Object> findmap) {
+	public Map<String, Object> selectone(Map<String, Object> findmap) throws Exception{
 		
 		return SqlSession.selectOne("org.spring.my.BoardMapper.selectone", findmap);
 	}
 
 	@Override
-	public List<Board> selectlist(Page page) {
+	public List<Map<String,Object>> selectlist(Page page) throws Exception{
 		
 		return SqlSession.selectList("org.spring.my.BoardMapper.selectlist", page);
 	}
 	
 	//전체 게시물 수 구하기
 	@Override
-	public int selecttotcnt(Page page) {
+	public int selecttotcnt(Page page) throws Exception{
 		
 		return SqlSession.selectOne("org.spring.my.BoardMapper.selecttotcnt", page);
 	}
 
 	@Override
-	public void readcountadd(int bnum) {
+	public void readcountadd(int bnum) throws Exception{
 		SqlSession.selectOne("org.spring.my.BoardMapper.readcountadd", bnum);
 		
 	}
 
 	@Override
-	public void updatelikecnt(int bnum) {
+	public void updatelikecnt(int bnum) throws Exception{
 		SqlSession.selectOne("org.spring.my.BoardMapper.updatelikecnt", bnum);
 		
 	}
 
 	@Override
-	public void updatelikecntcancel(int bnum) {
+	public void updatelikecntcancel(int bnum) throws Exception{
 		SqlSession.selectOne("org.spring.my.BoardMapper.updatelikecntcancel", bnum);
 		
 	}
 
 	@Override
-	public void updatedislikecnt(int bnum) {
+	public void updatedislikecnt(int bnum) throws Exception{
 		SqlSession.update("org.spring.my.BoardMapper.updatedislikecnt", bnum);
 		
 	}
 
 	@Override
-	public void updatedislikecntcancel(int bnum) {
+	public void updatedislikecntcancel(int bnum) throws Exception{
 		SqlSession.update("org.spring.my.BoardMapper.updatedislikecntcancel", bnum);
 		
 	}
 
 	@Override
-	public void updateremoveyn(int bnum) {
+	public void updateremoveyn(int bnum) throws Exception{
 		SqlSession.update("org.spring.my.BoardMapper.updateremoveyn", bnum);
 		
 	}

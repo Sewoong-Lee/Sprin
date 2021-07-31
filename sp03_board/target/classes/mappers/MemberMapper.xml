@@ -13,5 +13,14 @@
 		select * from member
 		WHERE userid = #{userid}
 	</select>
-
+	
+	<update id="emailauth">
+		update member
+		set emailauth = '1'
+		where userid = #{userid}
+	</update>
+	<insert id="insertnaver">
+		INSERT INTO member(userid, passwd, email, simplejoin)
+		VALUES (#{email},'naver',#{email},'1')
+	</insert>
 </mapper>

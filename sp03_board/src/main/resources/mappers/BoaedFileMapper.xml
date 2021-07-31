@@ -24,4 +24,9 @@
 		WHERE bnum  = #{bnum}
 	</select>
 	
+	<delete id="delete">
+		DELETE FROM boardfile
+		WHERE fnum = #{fnum}
+	</delete>
+	
 </mapper>

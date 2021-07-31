@@ -2,6 +2,9 @@ package org.spring.my.service;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -59,6 +62,37 @@ public class FileServiceimpl implements FileService{
 	@Override
 	public void insertboardfile(Map<String, Object> fmap) {
 		filedao.insertboardfile(fmap);
+	}
+
+	@Override
+	public void insertdoardfilelist(List<MultipartFile> files, int bnum) {
+		//매퍼에게 전달할 맵
+		Map<String, Object> fmap = new HashMap<>();
+		
+		//파일맵에 bnum저장
+		fmap.put("bnum", bnum);
+		
+		//파일이름 리스트 만들기
+		List<String> filenamelist = new ArrayList<>();
+				
+		//만약 files가 널이라면(파일 추가 인풋창을 다 날리면) 리턴
+		if(files == null) return ;
+				
+		for(MultipartFile mf :files) {
+			//파일 업로드 저장
+			String filename = fileupload(mf);
+					
+			//파일 네임이 공백이 아닐때만 추가해라
+			if(!filename.equals("")) {
+				filenamelist.add(filename);
+			}
+		}
+		//filenamelist의 사이즈가 0이면 돌아가라
+		if(filenamelist.size() == 0) return ;
+		fmap.put("filenamelist", filenamelist);
+		//System.out.println(fmap);
+		filedao.insertboardfile(fmap);
+		
 	}
 
 	

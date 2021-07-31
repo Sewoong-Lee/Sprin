@@ -17,7 +17,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
+//@RestController //@Controller + @ResponseBody 아래의 @ResponseBody 를 생략 가능
 @Controller
 @RequestMapping("reply")
 public class ReplyController {
