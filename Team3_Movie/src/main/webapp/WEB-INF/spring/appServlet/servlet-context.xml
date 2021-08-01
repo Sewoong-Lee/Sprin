@@ -26,7 +26,7 @@
 		<beans:property name="suffix" value=".jsp" />
 	</beans:bean>
 	
-	<context:component-scan base-package="org.spring.my" />
+	<context:component-scan base-package="three.team.movie" />
 	
 	<!-- 파일을 업로드 처리하는 객체 생성 요청문  -->
 	<!-- maxUploadSize : 10메가바이트 -->
