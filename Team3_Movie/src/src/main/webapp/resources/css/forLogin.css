@@ -1,0 +1,40 @@
+@charset "UTF-8";
+
+
+table {
+	font-style :normal;
+	margin-left: auto;
+    	margin-right: auto;						
+}
+table h2{
+	margin: 20px;
+}
+
+a {
+	text-decoration: none;
+	color: black;
+}
+table input {
+	width: 300px;
+	height: 40px;
+	margin-bottom: 15px;
+}
+#signUpF {
+	text-align: right;
+}
+
+table button {
+	width: 300px;
+	height: 40px;
+	color: white;
+}
+table button:hover {
+	cursor: pointer;
+}
+
+table #checkLogin {
+	background-color: blue;
+}
+table #naverLogin {
+	background-color: green;
+}

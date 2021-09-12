@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="three.team.movie.User_tagMapper">
+	<insert id="tagSelected">
+		insert into MV_USER_TAG values(#{user_id},#{tag})
+	</insert>
+	
+	<select id="getUserTag" resultType="java.util.HashMap">
+		SELECT UT.USER_ID, UT.TAG_CODE, G.GENRE_NAME
+		FROM MV_USER_TAG UT join MV_GENRE G
+		on(UT.TAG_CODE = G.GENRE_CODE)
+		WHERE USER_ID = #{user_id}
+	</select>
+	
+	<delete id="delete">
+		delete from MV_USER_TAG where user_id = #{user_id}
+	</delete>
+</mapper>

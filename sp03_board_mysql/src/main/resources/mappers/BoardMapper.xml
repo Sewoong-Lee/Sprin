@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.spring.my.BoardMapper">
+	
+	<!-- keyProperty : 키 생성 후 dto bnum에 셋팅 -->
+	<insert id="insert" parameterType="Board" useGeneratedKeys="true" keyProperty="bnum">
+		insert into board(userid,subject,content,ip)
+		VALUES (#{userid},#{subject},#{content},#{ip})
+	</insert>
+	
+	<delete id="delete">
+		DELETE FROM board
+		WHERE bnum = #{bnum}
+	</delete>
+	
+	<update id="update">
+		UPDATE board
+		set 
+		subject = #{subject},
+		content =  #{content},
+		ip = #{ip},
+		modifydate = now()
+		WHERE bnum = #{bnum}
+	</update>
+	
+	<select id="selectone" resultType="java.util.Map">		
+		SELECT B.*, UM.likegubun
+		FROM board B LEFT JOIN 
+		    (SELECT * FROM usermange
+		      WHERE GUBUN = '1'
+		        AND userid = #{userid}) UM 
+		ON (B.bnum = UM.num)
+		WHERE B.bnum = #{bnum}
+	</select>
+	
+	<sql id="find">
+			<if test="findkey == 'userid'">
+				<!-- WHERE userid  like '%' || #{findvalue} || '%' -->
+				WHERE userid  like concat( '%', #{findvalue}, '%')
+			</if>
+			<if test="findkey == 'subject'">
+				<!-- WHERE subject  like '%' || #{findvalue} || '%' -->
+				WHERE subject  like concat( '%', #{findvalue}, '%')
+			</if>
+			<if test="findkey == 'content'">
+				<!-- WHERE content  like '%' || #{findvalue} || '%' -->
+				WHERE content  like concat( '%', #{findvalue}, '%')
+			</if>
+			<if test="findkey == 'subcon'">
+				<!-- WHERE content  like '%' || #{findvalue} || '%' or subject like '%' || #{findvalue} || '%' -->
+				WHERE content  like concat( '%', #{findvalue}, '%')
+			    or subject like concat('%',#{findvalue},'%')
+			</if>
+	</sql>
+	
+	<select id="selectlist" resultType="java.util.Map">
+	<!-- 게시물 리스트 페이징처리-->
+<!-- 		select * from board
+		<include refid="find"/> -->
+		
+<!-- 		SELECT b.* FROM
+		    (SELECT ROWNUM  rnum, b.* FROM
+		        (SELECT * FROM board
+		        <include refid="find"/>
+		        order by bnum desc) b ) b
+		where b.rnum BETWEEN #{startnum} and #{endnum} -->
+	<!-- 게시물 리스트 페이징처리 -> 댓글 개수 추가 (기존 오라클 최총)-->
+		<!-- SELECT b.* FROM
+		    (SELECT ROWNUM  rnum, b.* FROM
+		        (SELECT b.*, NVL(r.rcnt,0) rcnt
+					FROM board b left join
+				(SELECT bnum, COUNT(*) rcnt
+					from reply
+					group by bnum) r
+				on (b.bnum = r.bnum)
+				<include refid="find"/>
+				order by b.bnum desc) b ) b
+		where b.rnum BETWEEN #{startnum} and #{endnum} -->
+		
+		<!-- mysql용 -->
+		SELECT b.*, ifnull(r.rcnt,0) rcnt
+		FROM board b left join
+			(SELECT bnum, COUNT(*) rcnt
+				from reply
+			group by bnum) r
+			on (b.bnum = r.bnum)
+			<include refid="find"/>
+		order by b.bnum desc
+		limit #{startnum},#{perpage}
+		<!-- 시작페이지와 한페이지당 몇개인지 설정 -->
+	</select>
+	
+	<!-- 전체 게시물 수 -->
+	<select id="selecttotcnt" resultType="int">
+		SELECT count(*) totcnt FROM board
+		<include refid="find"/>
+	</select>
+	
+	<!-- 조회수 +1 -->
+	<update id="readcountadd">
+		UPDATE BOARD
+		SET READCNT = READCNT +1
+		WHERE BNUM = #{bnum}
+	</update>
+	
+	<!-- 좋아요 +1 -->
+	<update id="updatelikecnt">
+		UPDATE BOARD
+		SET likecnt = likecnt +1
+		WHERE BNUM = #{bnum}
+	</update>
+	
+	<!-- 좋아요 -1 -->
+	<update id="updatelikecntcancel">
+		UPDATE BOARD
+		SET likecnt = likecnt -1
+		WHERE BNUM = #{bnum}
+	</update>
+	
+	<!-- 싫어요 +1 -->
+	<update id="updatedislikecnt">
+		UPDATE BOARD
+		SET dislikecnt = dislikecnt +1
+		WHERE BNUM = #{bnum}
+	</update>
+	
+	<!-- 싫어요 -1 -->
+	<update id="updatedislikecntcancel">
+		UPDATE BOARD
+		SET dislikecnt = dislikecnt -1
+		WHERE BNUM = #{bnum}
+	</update>
+	
+	<!-- removeyn : 삭제값 y로 변경 -->
+	<update id="updateremoveyn">
+		update board
+		set removeyn = 'y'
+		where bnum = #{bnum}
+	</update>
+	
+</mapper>

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="three.team.movie.BoardMapper">
+	<!-- 이벤트 공지 전체 리스트 -->
+	<select id="eventlist" resultType="three.team.movie.dto.Mv_board">
+		select * from MV_BOARD
+	</select>
+	
+	<!-- 이벤트 공지 단건 조회 -->
+	<select id="selectone_board" resultType="three.team.movie.dto.Mv_board">
+		select * from MV_BOARD
+		where BOARD_NUM = #{board_num}
+	</select>
+	
+	<!-- 게시물 추가 -->
+	<insert id="insert_board" parameterType="three.team.movie.dto.Mv_board">
+		<selectKey keyProperty="board_num" resultType="int" order="BEFORE">
+			select mv_bseq.nextval from dual
+		</selectKey>
+		insert into MV_BOARD(board_num,user_id,subject,content,ip)
+		VALUES (#{board_num},#{user_id},#{subject},#{content},#{ip})
+	</insert>
+	
+	<!-- 게시물 삭제 -->
+	<delete id="board_delete">
+		delete from MV_BOARD
+		where Board_NUM = #{board_num}
+	</delete>
+	
+	<!-- 검색 조건 -->
+	<sql id="find">
+			<if test="findkey == 'user_id'">
+				WHERE user_id  like '%' || #{findvalue} || '%'
+			</if>
+			<if test="findkey == 'subject'">
+				WHERE subject  like '%' || #{findvalue} || '%'
+			</if>
+			<if test="findkey == 'content'">
+				WHERE content  like '%' || #{findvalue} || '%'
+			</if>
+			<if test="findkey == 'subcon'">
+				WHERE content  like '%' || #{findvalue} || '%' or subject like '%' || #{findvalue} || '%'
+			</if>
+	</sql>
+	
+	<!-- 전체 게시물 수 -->
+	<select id="selecttotcnt" resultType="int">
+		SELECT count(*) totcnt FROM MV_BOARD
+		<include refid="find"/>
+	</select>
+	
+	<!-- 게시물 리스트 -->
+	<select id="selectlist" resultType="java.util.Map">
+		SELECT b.* FROM
+		     (SELECT ROWNUM  rnum, b.* FROM
+		         (SELECT * FROM MV_BOARD
+		         <include refid="find"/>
+		          order by BOARD_NUM desc) b ) b
+		where b.rnum BETWEEN #{startnum} and #{endnum}
+	</select>
+	
+	<!-- 게시물 조회 체크 -->
+	<select id="state_selectone" resultType="three.team.movie.dto.Mv_state">
+		select * from MV_state
+		where gubun = #{gubun}
+		and num = #{num}
+		and user_id = #{user_id}
+	</select>
+	
+	<!-- 게시물 조회 인서트 -->
+	<insert id="state_insert">
+		INSERT INTO MV_state (gubun, num, user_id, stategubun)
+		VALUES (#{gubun}, #{num}, #{user_id}, #{stategubun})
+	</insert>
+	
+	<!-- 게시물 조회수 +1 -->
+	<update id="readcountadd">
+		UPDATE MV_BOARD
+		SET READ_CNT = read_cnt +1
+		WHERE BOARD_NUM = #{board_num}
+	</update>
+	
+	<!-- 게시물 수정 -->
+	<update id="board_update">
+		UPDATE MV_BOARD
+		set 
+		subject = #{subject},
+		content =  #{content},
+		ip = #{ip},
+		modify_date = sysdate
+		WHERE BOARD_NUM = #{board_num}
+	</update>
+	
+	
+</mapper>

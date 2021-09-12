@@ -1,0 +1,48 @@
+@charset "UTF-8";
+
+table {
+	font-style :normal;
+	margin-left: auto;
+    	margin-right: auto;						
+}
+
+table th {
+	text-align: right;
+}
+table td {
+	vertical-align: middle;
+}
+
+table .inputSize{
+	width: 300px;
+	height: 40px;
+}
+table .withBtn{
+	width: 210px;
+	height: 40px;
+}
+
+.checkBtn {
+	width: 85px;
+	height: 40px;
+	color: white;
+	vertical-align: middle;
+}
+.btn{
+	width: 147px;
+	height: 40px;
+	color: white;
+}
+
+table button:hover {
+	cursor: pointer;
+}
+#genre {
+	overflow: scroll;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+	-webkit-appearance: none;
+	margin: 0;
+}

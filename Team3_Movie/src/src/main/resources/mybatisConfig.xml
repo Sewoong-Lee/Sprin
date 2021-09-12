@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<!-- 저장시 null 허용 -->
+	<settings>
+		<setting name="jdbcTypeForNull" value="NULL"/>
+		<setting name="jdbcTypeForNull" value="DOUBLE"/>
+	</settings>
+
+	
+	<!-- 알리아스 설정 -->
+ 	<typeAliases>
+		<!-- <typeAlias type="org.spring.my.dto.Board" alias="Board"/> -->
+		<typeAlias type="three.team.movie.dto.Mv_city" alias="Mv_city"/>
+		<typeAlias type="three.team.movie.dto.Cinema" alias="Cinema"/>
+		<typeAlias type="three.team.movie.dto.Mv_user" alias="Mv_user"/>
+	</typeAliases>
+</configuration>

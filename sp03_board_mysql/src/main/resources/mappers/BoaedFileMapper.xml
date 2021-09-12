@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.spring.my.BoaedFileMapper">
+	
+	<!-- 리스트 받은걸 포이치문으로 여러건 저장 -->
+	<!-- open : 반복문 전에 -->
+	<!-- close : 반복문이 끝나고 후에 -->
+	<!-- separator : 반복문 사이에 넣을거 -->
+	<!-- collection 안의 jlist를 풀어 jcode가 나오고 그걸 하나씩 sql문에 대입 -->
+	<!-- into boardfile (fnum, bnum, filename) VALUES (fseq.nextval, #{bnum}, #{filename}) -->
+	<insert id="insertboardfile" >
+		INSERT into BOARDFILE(bnum, filename)
+		VALUES 
+		<foreach collection="filenamelist" item="filename" index="index" separator="," open="" close="">
+			(#{bnum}, #{filename})
+		</foreach>
+	</insert>
+	
+	<select id="selectlist" resultType="org.spring.my.dto.Boardfile">
+		SELECT * FROM boardfile
+		WHERE bnum  = #{bnum}
+	</select>
+	
+	<delete id="delete">
+		DELETE FROM boardfile
+		WHERE fnum = #{fnum}
+	</delete>
+	
+</mapper>

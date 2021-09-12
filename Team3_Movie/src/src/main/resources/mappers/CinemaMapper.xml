@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="three.team.movie.CinemaMapper">
+
+	<select id="cityselectlist" resultType="Mv_city">		
+		select * from MV_CITY
+	</select>
+	<select id="cinemaselectlist" resultType="Cinema">
+		SELECT * FROM CINEMA
+		where CITY_CODE = #{CITY_CODE}
+	</select>
+	<select id="timeselectlist" resultType="three.team.movie.dto.Mv_time">
+		select * from MV_TIME
+		where TIME_DAY BETWEEN TO_CHAR(sysdate,'YYYY-MM-DD') 
+		AND TO_CHAR(sysdate+7,'YYYY-MM-DD')
+		AND ROWID IN (SELECT MAX(ROWID) FROM MV_TIME GROUP BY TIME_DAY)
+		AND MOVIE_NUM = #{movie_num}
+		ORDER BY TIME_DAY
+	</select>
+	<select id="saletimelist" resultType="three.team.movie.dto.Mv_time">
+		SELECT TI.* 
+		FROM MV_TIME TI JOIN CINEMA CN ON (TI.CINEMA_CODE = CN.CINEMA_CODE)
+		WHERE TI.CINEMA_CODE  = #{cinema_code}
+		and TI.TIME_DAY = #{selectday}
+		and ti.MOVIE_NUM = #{movie_num}
+	</select>
+	<select id="seats_alllist" resultType="three.team.movie.dto.Mv_seats">
+		SELECT MS.*, NVL(MSS.TIME_CODE,0) TIME_CODE
+		    FROM MV_SEATS MS
+		    LEFT JOIN 
+		        (SELECT *
+		            FROM MV_SALES_SEATS MSS
+		            JOIN MV_SALES MS
+		              ON MSS.SAL_NUM = MS.SAL_NUM
+		              where MS.TIME_CODE = #{time_code}) MSS
+		      ON MS.SEATS_CODE = MSS.SEATS_CODE
+		      order by MS.SEATS_CODE
+	</select>
+	<select id="sales_seats_list" resultType="three.team.movie.dto.Mv_sales_seats">
+		MV_SALES sa join MV_SALES_SEATS se on (sa.SAL_NUM = se.SAL_NUM)
+		where TIME_CODE = #{time_code}
+	</select>
+	
+	<!-- 예매 내역 저장 -->
+	<insert id="salesinsert" parameterType="three.team.movie.dto.Mv_sales">
+		insert into MV_SALES(SAL_NUM, TIME_CODE, USER_ID, TICKETS, PRICE, SALES_CHECK) 
+		values(#{sal_num},#{time_code}, #{user_id}, #{tickets}, #{price}, #{sales_check})
+	</insert>
+	<!-- 예약좌석 저장 -->
+	
+	<!-- 리스트 받은걸 포이치문으로 여러건 저장 -->
+	<!-- open : 반복문 전에 -->
+	<!-- close : 반복문이 끝나고 후에 -->
+	<!-- separator : 반복문 사이에 넣을거 -->
+	<!-- collection 안의 jlist를 풀어 jcode가 나오고 그걸 하나씩 sql문에 대입 -->
+	<!-- into boardfile (fnum, bnum, filename) VALUES (fseq.nextval, #{bnum}, #{filename}) -->
+	<insert id="sales_seatsinsert">
+<!-- 		INSERT into boardfile (fnum, bnum, filename)
+		SELECT fseq.nextval, f.* FROM (
+		<foreach collection="filenamelist" item="filename" index="index" separator="UNION ALL" open="" close="">
+			SELECT #{bnum}, #{filename} FROM dual
+		</foreach>
+		) f -->
+		
+		insert into MV_SALES_SEATS(SAL_NUM, SEATS_CODE)
+		SELECT mss.* from(
+		<foreach collection="seats_code" item="seats_code" index="index" separator="UNION ALL" open="" close="">
+			SELECT #{sal_num}, #{seats_code} FROM dual
+		</foreach>
+		)mss
+	</insert>
+	<select id="slectmaxsal_num" resultType="int">
+		select max(sal_num) maxsal_num from mv_sales
+		<!-- select SALES_NUM.nextval from dual -->
+	</select>
+</mapper>

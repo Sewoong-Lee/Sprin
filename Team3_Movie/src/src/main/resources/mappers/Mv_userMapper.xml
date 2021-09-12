@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="three.team.movie.Mv_userMapper">
+	<insert id="insert">
+		INSERT INTO MV_USER(USER_ID,PASSWD, USER_NAME, EMAIL, TEL, ZIP, ADDR1, ADDR2, FILE_NAME)
+		VALUES(#{user_id}, #{passwd}, #{user_name}, #{email}, #{tel}, #{zip}, #{addr1}, #{addr2}, #{file_name})
+	</insert>
+	
+	<select id="selectOne" resultType="Mv_user">
+		SELECT * FROM MV_USER
+		WHERE USER_ID = #{user_id}
+	</select>
+	
+	<select id="emailChecked" resultType="java.util.Map">
+		SELECT * FROM MV_USER WHERE EMAIL = #{email}
+	</select>
+	
+	<insert id="insertNaverLogin">
+		INSERT INTO MV_USER(USER_ID, PASSWD, USER_NAME, EMAIL, TEL, SIMPLE_JOIN)
+                VALUES(#{id}, 'naver', #{name}, #{email},#{tel}, '1')
+	</insert>
+	
+	<delete id = "delete">
+		DELETE FROM MV_USER where user_id = #{user_id}
+	</delete>
+	
+	<update id="update">
+		UPDATE MV_USER SET TEL = #{tel},
+		ZIP= #{zip}, ADDR1 = #{addr1},  ADDR2 = #{addr2}, FILE_NAME = #{file_name}
+		WHERE USER_ID = #{user_id}
+	</update>
+	
+	<update id="updatePw">
+		UPDATE MV_USER SET PASSWD = #{bCryptPw}
+		WHERE USER_ID = #{user_id}
+	</update>
+</mapper>

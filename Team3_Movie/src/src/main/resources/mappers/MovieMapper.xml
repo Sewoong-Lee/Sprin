@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.spring.my.MovieMapper">
+	<sql id="find">
+	<choose>
+	    <when test="findkey=='판타지'">
+	  	  where mg.GENRE_NAME like '%'|| '판타지' || '%'
+	    </when>
+	    <when test="findkey=='드라마'">
+	  	  where mg.GENRE_NAME like '%'|| '드라마' || '%'
+	    </when>
+	    <when test="findkey=='액션'">
+	  	  where mg.GENRE_NAME like '%'|| '액션' || '%'
+	    </when>
+	    <when test="findkey=='코미디'">
+	  	  where mg.GENRE_NAME like '%'|| '코미디' || '%'
+	    </when>
+	    <when test="findkey=='전쟁'">
+	  	  where mg.GENRE_NAME like '%'|| '전쟁' || '%'
+	    </when>
+	    <when test="findkey=='무협'">
+	  	  where mg.GENRE_NAME like '%'|| '무협' || '%'
+	    </when>
+	    <when test="findkey=='공포'">
+	  	  where mg.GENRE_NAME like '%'|| '공포' || '%'
+	    </when>
+	    <when test="findkey=='로맨스'">
+	  	  where mg.GENRE_NAME like '%'|| '로맨스' || '%'
+	    </when>
+	    <when test="findkey=='모험'">
+	  	  where mg.GENRE_NAME like '%'|| '모험' || '%'
+	    </when>
+	    <when test="findkey==null">
+	  	 	where mv.MOVIE_NAME like '%'|| '' || '%'
+			or mg.GENRE_NAME like '%'|| '' || '%'
+	    </when>
+	    <otherwise>
+	    	where mv.MOVIE_NAME like '%'|| #{findkey} || '%'
+	    </otherwise>
+	  </choose>
+	</sql>
+	
+	<!-- 영화 인서트는 관리자만 api에서 받은값 장르코드/국가명/영화소개가 없다 업데이트로 이3개 업데이트 해야함 -->
+	<insert id="insert">
+		insert into MV_MOVIE_DATA(GENRE_CODE,MOVIE_NUM,COUNTRY_NAME,MOVIE_NAME,DIRECTOR,MOVIE_MEMO,MOVIE_POSTER_LINK,ACTOR_NAME)
+		values('c0100',MV_MOVIE_DATA_NUM.NEXTVAL,'국가명',#{movie_name},#{director},'영화소개',#{movie_poster_link},#{actor_name})
+	</insert>
+	
+	<!-- 영화 전체리스트 게시물 수 구하기 (제목/장르만 검색 값 넣어야할것 우선 정글이름과 드라마코드로 임의설정)--> 
+	<select id="selectTotCnt" resultType="int">
+		SELECT count(*) totCnt from MV_MOVIE_DATA mv 
+		inner join MV_GENRE mg on (mv.GENRE_CODE = mg.GENRE_CODE)
+		<include refid="find"></include>
+	</select>
+	
+		<!-- 영화 회원관심 리스트 조회수 구하기 -->
+	<select id="selectTotCntUser" resultType="int">
+		SELECT count(*) totCnt from MV_USER m inner join MV_USER_TAG t on (m.USER_ID = t.USER_ID)
+		left join MV_MOVIE_DATA mv on(t.GENRE_CODE = mv.GENRE_CODE)
+		where m.USER_ID = #{user_id} 
+	</select>
+	
+	<!-- 영화 detail -->
+	<select id="selectOne" resultType="java.util.Map">
+		select *from 
+		MV_MOVIE_DATA mv inner join MV_GENRE mg on(mv.GENRE_CODE = mg.GENRE_CODE)
+		where mv.MOVIE_NUM = #{movie_num}
+	</select>
+
+	<!--  영화 메인화면 구성시  셀렉트문 두개 
+	 select 1 회원관심영화 or... 리스트 2 인기개봉자(최신작순으로?) 리스트 출력  -->
+	
+	<!-- 영화 전체리스트 (4개 포스터만 보이게 페이징처리)-->
+	<select id="selectList" resultType="three.team.movie.dto.Mv_movie_data">
+		select * from(
+		    select rownum rn, num.* from (
+		         SELECT *from MV_MOVIE_DATA mv 
+		          inner join MV_GENRE mg on (mv.GENRE_CODE = mg.GENRE_CODE)
+		          <include refid="find"></include>
+		          order by MOVIE_NUM desc
+		        )num
+		    )
+		where rn between #{startNum} and #{endNum}
+	</select>
+	
+	<!-- 회원 관심장르코드 리스트 출력 (4개 포스터만 보이게 페이징처리)-->
+	<select id="selectListUser" resultType="java.util.Map" >
+		select *from 
+		    (select rownum rn, m.USER_ID,t.TAG_CODE,mv.MOVIE_NUM,mv.MOVIE_NAME,mv.MOVIE_POSTER_LINK
+		        from MV_USER m inner join MV_USER_TAG t on(m.USER_ID = t.USER_ID)
+		        join MV_MOVIE_DATA mv on(t.TAG_CODE = mv.GENRE_CODE)
+		        where m.USER_ID = #{user_id} 
+		        order by MOVIE_NUM desc)   
+		WHERE rn between #{mvUser_Page.startNum} and #{mvUser_Page.endNum}
+	</select>
+	
+	<!-- 별평점 값 출력 -->
+	<select id="starRating" resultType="double">
+		SELECT ROUND(avg(mr.star_rating),1)
+		from MV_MOVIE_REPLY mr inner join MV_USER mu on (mr.USER_ID =mu.USER_ID)
+		where mr.MOVIE_NUM = #{movie_num}
+	</select>
+	
+	
+</mapper>

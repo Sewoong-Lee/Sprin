@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.spring.my.ReplyMapper">
+
+	<insert id="insert">
+		insert into MV_MOVIE_REPLY(MR_NUM,MOVIE_NUM,USER_ID,CONTENT,IP,RE_STEP,RE_LEVEL,star_rating)
+		values(MR_NUM_SEQ.NEXTVAL,#{movie_num},#{user_id},#{content},#{ip},#{re_step},#{re_level},#{star_rating})
+	</insert>
+
+	<update id="update">
+		update MV_MOVIE_REPLY
+		set CONTENT = #{content}
+		where MR_NUM = #{mr_num}  
+	</update>
+ 	
+ 	<delete id="delete">
+ 		delete from MV_MOVIE_REPLY
+		where MR_NUM = #{mr_num}
+ 	</delete>
+ 	
+	<!-- 댓글 리스트 -->
+	<select id="selectList" resultType="java.util.Map">
+		select * from(
+		    select rownum rn, num.* from (
+		         select *from 
+		        MV_MOVIE_REPLY mr inner JOIN MV_MOVIE_DATA mm on(mr.MOVIE_NUM = mm.MOVIE_NUM)
+		        where mr.MOVIE_NUM = #{movie_num}
+		        order by MR_NUM desc
+		        )num
+		    )
+		where rn between #{replypage.startNum} and #{replypage.endNum}
+	</select>
+
+	<!-- 댓글 디테일 -->
+	<select id="selectOne" resultType="three.team.movie.dto.Mv_movie_reply">
+		select *from MV_MOVIE_REPLY
+		where MR_NUM = #{mr_num}
+	</select>
+
+	 <!-- 댓글 게시물 수  -->
+	<select id="totReplCnt" resultType="int">
+		SELECT count(*) totCnt 
+		from MV_MOVIE_REPLY mr inner JOIN MV_MOVIE_DATA mm on(mr.MOVIE_NUM = mm.MOVIE_NUM)
+		where mr.MOVIE_NUM = #{movie_num}
+	</select>
+
+
+</mapper>
