@@ -1,13 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
-		<item key="selection" value="filename"/>
+		<item key="selection" value="bfmap"/>
 		<item key="wrap" value="true"/>
 		<item key="casesensitive" value="false"/>
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
 		<list key="findhistory">
+			<item value="bfmap"/>
+			<item value="ip"/>
+			<item value="filedelete"/>
+			<item value="modify"/>
+			<item value="modi"/>
+			<item value="ResponseBody"/>
 			<item value="filename"/>
 			<item value="filenamelist"/>
 			<item value="fileupload"/>
@@ -17,12 +23,6 @@
 			<item value="daylist"/>
 			<item value="bfmap.board."/>
 			<item value="좋아요"/>
-			<item value="원본"/>
-			<item value="원본 수정"/>
-			<item value="repcontent"/>
-			<item value="수정"/>
-			<item value="sys"/>
-			<item value="SYS"/>
 		</list>
 		<list key="replacehistory">
 		</list>
