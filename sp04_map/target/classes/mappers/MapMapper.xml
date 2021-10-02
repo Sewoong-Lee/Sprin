@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="org.spring.my.BMapMapper">
+<mapper namespace="org.spring.my.MapMapper">
 
 <!-- 	<insert id="insertboardfile" >
 		INSERT into boardfile (fnum, bnum, filename)
@@ -13,10 +13,22 @@
 		) f
 	</insert> -->
 	
-	<select id="selectlist" resultType="java.util.Map">
-		SELECT * FROM boardfile
-		WHERE bnum  = #{bnum}
+	<select id="selectlist" resultType="java.util.Map" parameterType="java.util.Map">
+		select * from mh_map_contents
 	</select>
+	
+<!-- 	<select id="getList" parameterType="tbl_factoryVO" resultType="tbl_factoryVO">
+	SELECT
+	    fctry_cmpnm 상호명
+	    fctry_rdnmadr 도로명주소
+	FROM
+	    tbl_factory 
+	WHERE
+	<if test="searchWrd != null and searchWrd !=''">
+	    (fctry_rdnmadr LIKE CONCAT('%', #{searchWrd},'%') or  
+	    fctry_cmpnm LIKE CONCAT('%', #{searchWrd},'%'))
+	</if>
+	</select> -->
 	
 <!-- 	<delete id="delete">
 		DELETE FROM boardfile
