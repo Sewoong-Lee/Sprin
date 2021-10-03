@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
-		<item key="selection" value="infowindow"/>
+		<item key="selection" value="floatDiv"/>
 		<item key="wrap" value="true"/>
 		<item key="casesensitive" value="false"/>
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
 		<list key="findhistory">
+			<item value="floatDiv"/>
+			<item value="$(&apos;#testDIV&apos;).html"/>
+			<item value="HID"/>
+			<item value="%"/>
+			<item value="select"/>
+			<item value="mapOnDiv"/>
+			<item value="serchJusoBtn"/>
+			<item value="each"/>
+			<item value="eagh"/>
+			<item value="인포윈도우"/>
 			<item value="infowindow"/>
+			<item value="positions"/>
+			<item value="content"/>
 			<item value="/해당 좌표로 이동"/>
 			<item value=" // 마커를 표시할 위치"/>
-			<item value="// 마커를 표시할 위치와 title 객체 배열입니다 "/>
-			<item value="마커 이미지의"/>
-			<item value="이동"/>
-			<item value="마커 이미지의 이미지 크기 입니다"/>
-			<item value="imageSrc"/>
-			<item value="cinema/time"/>
-			<item value="saletimelist"/>
-			<item value="seats"/>
-			<item value="cinema/seats"/>
-			<item value="DOCTYPE"/>
-			<item value="DOCTYPE "/>
-			<item value="testDIV"/>
 		</list>
 		<list key="replacehistory">
 		</list>

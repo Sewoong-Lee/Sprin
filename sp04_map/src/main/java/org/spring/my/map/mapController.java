@@ -29,7 +29,7 @@ public class mapController {
 	@RequestMapping("/map/mapSerch")
 	public List<Map<String, Object>> home(@RequestParam Map<String, Object> map, Model model) {
 		System.out.println(map.toString());
-
+		
 		List<Map<String, Object>> listmap = mapservice.selectlist(map);
 		System.out.println(listmap.toString());
 		
