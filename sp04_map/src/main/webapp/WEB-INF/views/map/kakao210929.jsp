@@ -155,7 +155,6 @@
 				data:{keyword, select1, select2},
 				success:function(data){
 					console.log(data[0]);
-					$('#testDIV').html('<h2>' + data[0].BRAND_NAME+ '</h2>' + data[0].BRAND_NAME + data[0].BRAND_NAME);
 					
 					mar(data);
 					showDIV(data);
@@ -173,9 +172,6 @@
 		//검색 데이터로 마커 표시와 인포윈도우 이벤트 생성
 		function mar(data) {
 			// 마커를 표시할 위치와 title 객체 배열입니다 
-			var num = 0.001000;
-			var x = 33.450705;
-			var y = 126.570677;
 			var positions = [];
 			$.each(data, function(i){
 			positions[i] = 
@@ -186,15 +182,15 @@
 				        '<a class="infoAddr">'+data[i].ADDRESS+'</a><br>'+
 				        '<a class="infoTel">연락처: '+data[i].TEL+'</a><br><br>'+
 				        '<div style="text-align:center;">'+
-				        '<img alt="이미지" src="imgs/unnamed.jpg" width="250px" height="150px" ></div></div>',
+				        '<img alt="이미지" src="/my/resources/imgs/unnamed.jpg" width="250px" height="150px" ></div></div>',
 
-				        latlng: new kakao.maps.LatLng(x + num, y + num)
+				        latlng: new kakao.maps.LatLng(data[i].LATITUDE, data[i].LONGITUDE)
 				    }
-			num += 0.001000;
 			});
 			console.log('positions');
 			console.log(positions);
 			
+
 			for (var i = 0; i < positions.length; i ++) {
 			    // 마커를 생성합니다
 			    var marker = new kakao.maps.Marker({
@@ -223,7 +219,7 @@
 			    })(marker, infowindow);
 			}
 			//해당 좌표로 이동
-	     	var coords = new kakao.maps.LatLng(x + num, y + num);
+	     	var coords = new kakao.maps.LatLng(data[0].LATITUDE, data[0].LONGITUDE);
 	     	map.setCenter(coords);
 		}
 		
@@ -233,17 +229,15 @@
 			$('#floatDiv').show();
 			//맵 위의 div 보이게
 			$('#mapOnDiv').show();
-			/* $('#mapDiv').css('width', '70%'); */
 			$('.map_wrap').css('width', '73%');
-			
-			var listName = ['서울숲', '골목 빵집', '태종에게 화살을', '한성 교통', '복합 문화공간', '서울 무형']; 
-			var listContent = '내용 공간';
 			 
 			var	itemStr = '<div><a id="itemStrTitle">지역 문화 콘텐츠</a>&nbsp;&nbsp;<a id="itemStrNum">'+data.length+'개</a></div>';
 			
+			var conten = '봄철의 들판을 네가 혼자 거닐고 있으면 말이지, 저쪽에서 벨벳같이 털이 부드럽고 눈이 똘망똘망한 새끼곰이 다가오는 거야. 그리고 네게 이러는 거야. ‘안녕하세요, 아가씨. 나와 함께 뒹굴기 안하겠어요?’ 하고. 그래서 너와 새끼곰은 부둥켜안고 클로버가 무성한 언덕을 데굴데굴 구르면서 온종일 노는 거야. 그거 참 멋지지?';
+			
 			for(var i=0;i<data.length;i++){
 				itemStr += '<div class="outer" style="height:100px;"><div class="inner">'+
-							'<div class="first"><img alt="이미지" src="'+'imgs/'+i+'.webp'+'" width="80px"></div>'+
+							'<div class="first"><img alt="이미지" src="/my/resources/imgs/unnamed.jpg" width="80%"></div>'+
 							'<div class="innerDiv"><div class="second">'+ data[i].BRAND_NAME + '</div>'+
 							'<div class="third">'+data[i].INTRO+'</div></div>'+
 							'</div></div><hr>';
@@ -278,7 +272,7 @@
 	<div id="searchDiv">
 	<form action="" name="frm" id="frm" >
 	<div style="display: flex; align-items: center;">
-		<img alt="logo" src="imgs/캡처.PNG" style="margin-right: 10px;">
+		<img alt="logo" src="/my/resources/imgs/캡처.PNG" style="margin-right: 10px;">
 
 	    	<select id="select1" name="select1">
     			<option>시 지역</option>
@@ -289,7 +283,7 @@
 	    		<option>구 지역</option>
 	    	</select>
 
-	        <input type="text" value="성동문화재단" id="keyword" size="15" style="margin-right: 10px;" name="keyword">
+	        <input type="text" value="성동" id="keyword" size="15" style="margin-right: 10px;" name="keyword">
 	        <button id="btn" type="button" style="margin-right: 10px;">검색하기</button>
 	        <input type="checkbox" id="checkbox" style="margin-right: 10px;"> 화면 내에서 검색하기
 	        <button type="button" id="panTo" >지도 리셋</button>
@@ -323,8 +317,6 @@
 	<div id="clickLatlng"></div>
 
 </div>
-
-	<div id="testDIV"></div>
 
 </body>
 </html>

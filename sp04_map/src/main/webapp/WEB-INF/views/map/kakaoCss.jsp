@@ -213,6 +213,12 @@
 		text-overflow: ellipsis;
 		white-space: nowrap;
 		height: 100px; */
+		
+		overflow: hidden;
+		text-overflow: ellipsis;
+		display: -webkit-box;
+		-webkit-line-clamp: 3; /* 몇번쨰 줄에서 줄일것인지 */
+		-webkit-box-orient: vertical;
 	    
 	}
 	
