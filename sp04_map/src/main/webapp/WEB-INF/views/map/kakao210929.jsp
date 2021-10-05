@@ -11,6 +11,7 @@
 <%@ include file="kakaoCss.jsp"%>
 
 <script type="text/javascript">
+var markerTitle = 0;
 	$(document).ready(function() {
 		
 		//지도 위도, 경도
@@ -133,12 +134,22 @@
 		//검색버튼 누르면
 		$('#container').on('click','#btn',function(e) {
 			e.preventDefault();
+			
+			markerTitle = $('#title').val();
+			
 			serch();
 		 });
 		
+		//div의 이름을 클릭하면 위의 마커타이틀 변수에 값 넘김
+		$('#container').on('click','.DIVclick',function(e) {
+			e.preventDefault();
+			/* var th = $(this).parents("a").attr("href"); */
+			markerTitle = $(this).attr("href");
+			alert(markerTitle);
+		});
+		
+		
 		function serch() {
-			
-			
 			var keyword = $('#keyword').val();
 			var select1 = $('#select1').val();
 			var select2 = $('#select2').val();
@@ -168,6 +179,9 @@
 			});
 		}
 		
+/* 		$('#container').on('click','.DIVclick',function(e) {
+			alert('클릭함');
+		}); */
 		
 		//검색 데이터로 마커 표시와 인포윈도우 이벤트 생성
 		function mar(data) {
@@ -196,10 +210,15 @@
 			    var marker = new kakao.maps.Marker({
 			        map: map, // 마커를 표시할 지도
 			        position: positions[i].latlng, // 마커의 위치
-			        
+			        title : data[i].M_IDX ,
 			        clickable: true // **마커를 클릭했을 때 지도의 클릭 이벤트가 발생하지 않도록 설정합니다
 			    });
-							    
+			    console.log('마커 타이틀');
+			    console.log(marker.getTitle());
+			    
+			    console.log('마커 포지션');
+			    console.log(marker.getPosition());
+			    
 			    // 마커에 표시할 인포윈도우를 생성합니다 
 			    var infowindow = new kakao.maps.InfoWindow({
 			        content: positions[i].content, // 인포윈도우에 표시할 내용
@@ -215,13 +234,29 @@
 			            infowindow.open(map, marker);
 			            console.log('클릭');
 			        });
+			        
+			       $('#container').on('click','.DIVclick',function(e) {
+			    	   /* var markerTitle = $('#title').val(); */
+			    	   if(marker.getTitle() == markerTitle){
+			    			infowindow.open(map, marker);
+				            console.log('클릭');
+				          //해당 좌표로 이동
+				          console.log(marker.getPosition().La);
+					     	var coords = new kakao.maps.LatLng(marker.getPosition().Ma, marker.getPosition().La);
+					     	map.setCenter(coords);
+			    	   }
+		            
+			    	   
+					});
 
 			    })(marker, infowindow);
+			    
 			}
 			//해당 좌표로 이동
 	     	var coords = new kakao.maps.LatLng(data[0].LATITUDE, data[0].LONGITUDE);
 	     	map.setCenter(coords);
 		}
+		
 		
 		//옆의 div를 보이게 변경
 		function showDIV(data) {
@@ -238,7 +273,7 @@
 			for(var i=0;i<data.length;i++){
 				itemStr += '<div class="outer" style="height:100px;"><div class="inner">'+
 							'<div class="first"><img alt="이미지" src="/my/resources/imgs/unnamed.jpg" width="80%"></div>'+
-							'<div class="innerDiv"><div class="second">'+ data[i].BRAND_NAME + '</div>'+
+							'<div class="innerDiv"><div class="second"><a href="'+data[i].M_IDX+'" class="DIVclick">'+ data[i].BRAND_NAME + '</a></div>'+
 							'<div class="third">'+data[i].INTRO+'</div></div>'+
 							'</div></div><hr>';
 			};
@@ -248,6 +283,7 @@
 			
 			//지도 다시 불러오기
 			map.relayout();
+			
 		}
 		
 		//셀렉트 박스 옵션 변경
@@ -315,8 +351,8 @@
 	</div>
 	
 	<div id="clickLatlng"></div>
-
 </div>
+<a href="ccc" id=""></a>
 
 </body>
 </html>
