@@ -4,9 +4,42 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.spring.my.MapMapper">
 	
-	<select id="selectlist" resultType="java.util.Map" parameterType="java.util.Map">
+	<!-- <select id="selectlist" resultType="java.util.Map" parameterType="java.util.Map">
 		select * from mh_map_contents
 		where BRAND_NAME LIKE '%'+#{keyword}+'%'
+	</select> -->
+	
+	<select id="selectlist" resultType="java.util.Map" parameterType="java.util.Map">
+		<!-- select * from mh_map_contents
+		where BRAND_NAME LIKE '%'+#{keyword}+'%' -->
+		<![CDATA[
+			select con.*, cat.* from
+			mh_map_contents AS con JOIN
+			(select * from mh_map_categories where PATINDEX(dbo.UTF8_Search1stText('%'+#{keyword}+'%') , S_CATEGORIES) > 0) cat
+			ON con.C_IDX = cat.C_IDX
+		]]>
+		
+	</select>
+	
+	<select id="checkedselectlist" resultType="java.util.Map" parameterType="java.util.Map">
+		<![CDATA[
+			select * from mh_map_contents
+			where LATITUDE >= #{dataX}
+			and LONGITUDE >= #{dataY}
+		]]>
+	</select>
+	
+	<!-- <select id="Initial_Search" resultType="java.util.Map" parameterType="java.util.Map">
+		<![CDATA[
+			select con.*, cat.* from
+			mh_map_contents AS con JOIN
+			(select * from mh_map_categories where PATINDEX(dbo.UTF8_Search1stText(''%'+#{keyword}+'%'') , S_CATEGORIES) > 0) cat
+			ON con.C_IDX = cat.C_IDX
+		]]>
+	</select> -->
+	
+	<select id="GoInsertList" resultType="java.util.Map">
+		select * from mh_map_categories
 	</select>
 	
 </mapper>

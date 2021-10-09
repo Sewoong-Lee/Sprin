@@ -17,5 +17,16 @@ public class mapServiceimpl implements mapService {
 		return DAO.selectlist(map);
 	}
 
+	@Override
+	public List<Map<String, Object>> checkedselectlist(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return DAO.checkedselectlist(map);
+	}
+
+	@Override
+	public List<Map<String, Object>> GoInsertList() {
+		// TODO Auto-generated method stub
+		return DAO.GoInsertList();
+	}
 	
 }

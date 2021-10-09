@@ -25,15 +25,28 @@ public class mapController {
 		/* return "map/NewFile"; */
 	}
 	
+	@RequestMapping("/map/in")
+	public String insert(Model model) {
+		List<Map<String, Object>> listmap = mapservice.GoInsertList();
+		model.addAttribute("listmap", listmap);
+		return "map/insert";
+	}
+	
+	
 	@ResponseBody
 	@RequestMapping("/map/mapSerch")
 	public List<Map<String, Object>> home(@RequestParam Map<String, Object> map, Model model) {
 		System.out.println(map.toString());
+
+		if(Integer.parseInt((String) map.get("checked")) == 1 ) {
+			List<Map<String, Object>> checkedlistmap = mapservice.checkedselectlist(map);
+			return checkedlistmap;
+		}else {
+			List<Map<String, Object>> listmap = mapservice.selectlist(map);
+			System.out.println(listmap.toString());
+			return listmap;
+		}
 		
-		List<Map<String, Object>> listmap = mapservice.selectlist(map);
-		System.out.println(listmap.toString());
-		
-		return listmap;
 	}
 	
 

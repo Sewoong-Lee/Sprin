@@ -11,19 +11,16 @@
 <%@ include file="kakaoCss.jsp"%>
 
 <script type="text/javascript">
+
+
+
 var markerTitle = 0;
-var markers = [];  //추가
-var infos = [];  //추가
-
-var dataX = 0;
-var dataY = 0;
-
-var checked = 0;
-
+var markers = [];
+var infos = [];
 	$(document).ready(function() {
 		
 		// 지도 위에 표시되고 있는 마커를 모두 제거합니다
-		function removeMarker() {  //추가
+		function removeMarker() {
 		    for ( var i = 0; i < markers.length; i++ ) {
 		        markers[i].setMap(null);
 		    }   
@@ -31,7 +28,7 @@ var checked = 0;
 		}
 		
 		// 지도 위에 표시되고 있는 인포윈도우를 모두 제거합니다
-		function removeinfo() {  //추가
+		function removeinfo() {
 		    for ( var i = 0; i < infos.length; i++ ) {
 		    	infos[i].close(null);
 		    }   
@@ -157,14 +154,12 @@ var checked = 0;
 		$("#keyword").keypress(function(event){
 		  if (event.which == '13') {
 		      event.preventDefault();
-		      
 		    //버튼 누르면 마커 삭제
-				removeMarker();
-				//버튼 누르면 윈도우 삭제
-				removeinfo();
-				
-				markerTitle = $('#title').val();
-				
+			removeMarker();
+			//버튼 누르면 윈도우 삭제
+			removeinfo();
+			
+			markerTitle = $('#title').val();
 		      serch();
 		    }
 		});
@@ -203,44 +198,12 @@ var checked = 0;
 				return;
 			}
 			
-			//현재 보이는 범위 구하기
-			var bounds = map.getBounds();
-			console.log('bounds '+bounds);
-			// 영역의 남서쪽 좌표를 얻어옵니다 
-		    var swLatLng = bounds.getSouthWest(); 
-		    console.log('swLatLng '+swLatLng);
-		    console.log('swLatLng.getLat() '+swLatLng.getLat());
-		    console.log('swLatLng.getLng() '+swLatLng.getLng());
-			
-		    //범위 변수에 넣기
-		    dataX = swLatLng.getLat();
-			dataY = swLatLng.getLng();
-			
-			//체크박스 여부 확인
-			// 체크여부 확인
-			if($("input:checkbox[name=checkbox]").is(":checked") == true) {
-				checked = 1;
-				console.log('checked '+checked);
-				
-			}else{
-				checked = 0;
-			}
-			
 			$.ajax({
 				url:'/my/map/mapSerch',
 				type:'get',  //메소드 방식
-				data:{keyword, select1, select2, checked, dataX, dataY},
+				data:{keyword, select1, select2},
 				success:function(data){
 					console.log(data[0]);
-					
-/* 					for (var i = 0; i < data.length; i ++) {
-						if(data[i].LATITUDE > dataX){
-							dataX = data[i].LATITUDE;
-						}
-						if(data[i].LONGITUDE > dataY){
-							dataY = data[i].LONGITUDE;
-						}
-					} */
 					
 					mar(data);
 					showDIV(data);
@@ -289,8 +252,8 @@ var checked = 0;
 			        map: map, // 마커를 표시할 지도
 			        position: positions[i].latlng, // 마커의 위치
 			        title : data[i].M_IDX ,
-			        clickable: true, // **마커를 클릭했을 때 지도의 클릭 이벤트가 발생하지 않도록 설정합니다
-			        zIndex : 0 //마커의 클릭수 체크
+			        clickable: true // **마커를 클릭했을 때 지도의 클릭 이벤트가 발생하지 않도록 설정합니다
+			        
 			    });
 			    //마커를 변수에 담음
 			    markers.push(marker);
@@ -306,33 +269,18 @@ var checked = 0;
 			    // 마커에 표시할 인포윈도우를 생성합니다 
 			    var infowindow = new kakao.maps.InfoWindow({
 			        content: positions[i].content, // 인포윈도우에 표시할 내용
-			        zIndex : 999, //높을수록 위에
+			        
 			        removable : true // **removeable 속성을 ture 로 설정하면 인포윈도우를 닫을 수 있는 x버튼이 표시됩니다
 			    });
+			    //인포윈도우를 변수 배열에 담음
+			    infos.push(infowindow);
 
 			    // 마커에 이벤트를 등록하는 함수 만들고 즉시 호출하여 클로저를 만듭니다
 			    // 클로저를 만들어 주지 않으면 마지막 마커에만 이벤트가 등록됩니다
 			    (function(marker, infowindow) {
 			        // 마커에 mouseover 이벤트를 등록하고 마우스 오버 시 인포윈도우를 표시합니다 
 			        kakao.maps.event.addListener(marker, 'click', function() {
-			        	marker.setZIndex(marker.getZIndex() + 1);
-			        	/* alert(marker.getZIndex()); */
-			        	if(marker.getZIndex()%2 === 0 ){
-			        		map.relayout();
-			        		removeinfo();
-			        		return;
-			        	}
-			        		map.relayout();
-			        		//인포윈도우 지우기
-				        	removeinfo();
-				        	infos.push(infowindow);
-				            infowindow.open(map, marker);
-				            console.log('클릭');
-				          //위치로 이동
-				            var coords = new kakao.maps.LatLng(marker.getPosition().Ma + 0.001, marker.getPosition().La);
-						    map.setCenter(coords);
-			        	
-			        	/* //인포윈도우 지우기
+			        	//인포윈도우 지우기
 			        	removeinfo();
 			        	
 			            infowindow.open(map, marker);
@@ -341,33 +289,13 @@ var checked = 0;
 			            
 			            //위치로 이동
 			            var coords = new kakao.maps.LatLng(marker.getPosition().Ma + 0.001, marker.getPosition().La);
-					    map.setCenter(coords); */
+					    map.setCenter(coords);
 			        });
 			        
 			       $('#container').on('click','.DIVclick',function(e) {
 			    	   /* var markerTitle = $('#title').val(); */
 			    	   if(marker.getTitle() == markerTitle){
-			    		   marker.setZIndex(marker.getZIndex() + 1);
-				        	if(marker.getZIndex()%2 !== 0 ){
-				        		//윈도우 지우기
-								removeinfo();
-				    			//인포윈도우 변수 배열에 담기
-				    			infos.push(infowindow);
-
-				    			infowindow.open(map, marker);
-					            console.log('클릭');
-
-					          //해당 좌표로 이동
-					          console.log(marker.getPosition().La);
-						     	var coords = new kakao.maps.LatLng(marker.getPosition().Ma + 0.001, marker.getPosition().La);
-						     	map.setCenter(coords);
-
-				        	}else{
-
-				        		removeinfo();
-
-				        	}
-			    		   /* //윈도우 지우기
+			    		 //윈도우 지우기
 							removeinfo();
 			    			//인포윈도우 변수 배열에 담기
 			    			infos.push(infowindow);
@@ -376,9 +304,18 @@ var checked = 0;
 				            console.log('클릭');
 				          //해당 좌표로 이동
 				          console.log(marker.getPosition().La);
-					     	var coords = new kakao.maps.LatLng(marker.getPosition().Ma  + 0.001, marker.getPosition().La);
-					     	map.setCenter(coords); */
+					     var coords = new kakao.maps.LatLng(marker.getPosition().Ma + 0.001, marker.getPosition().La);
+					     map.setCenter(coords);
 			    	   }
+			    	   
+						/* //선택한 인포윈도우가 아니라면?
+			    	   if(marker.getTitle() != markerTitle){
+			    		   //윈도우 지우기
+			    		   removeinfo();
+			    			//인포윈도우 변수 배열에 담기
+			    			infos.push(infowindow);
+			    		   
+			    	   } */
 		            
 			    	   
 					});
@@ -433,7 +370,6 @@ var checked = 0;
 			$("#select2").append(optStr);
 		});
 		
-		
 	});
 	</script>
 
@@ -456,7 +392,7 @@ var checked = 0;
 
 	        <input type="text" value="성동" id="keyword" size="15" style="margin-right: 10px;" name="keyword">
 	        <button id="btn" type="button" style="margin-right: 10px;">검색하기</button>
-	        <input type="checkbox" id="checkbox" style="margin-right: 10px;" name="checkbox"> 화면 내에서 검색하기
+	        <input type="checkbox" id="checkbox" style="margin-right: 10px;"> 화면 내에서 검색하기
 	        <button type="button" id="panTo" >지도 리셋</button>
 	</div>
 	    </form>

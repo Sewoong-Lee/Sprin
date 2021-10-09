@@ -12,9 +12,19 @@ public class mapDAO {
 	@Autowired
 	SqlSession SqlSession;
 
-	public List<Map<String, Object>> selectlist(Map<String, Object> map) {
+public List<Map<String, Object>> selectlist(Map<String, Object> map) {
 		
 		return SqlSession.selectList("org.spring.my.MapMapper.selectlist", map);
+	}
+
+	public List<Map<String, Object>> checkedselectlist(Map<String, Object> map) {
+		System.out.println("진입");
+		return SqlSession.selectList("org.spring.my.MapMapper.checkedselectlist", map);
+	}
+
+	public List<Map<String, Object>> GoInsertList() {
+		// TODO Auto-generated method stub
+		return SqlSession.selectList("org.spring.my.MapMapper.GoInsertList");
 	}
 	
 
