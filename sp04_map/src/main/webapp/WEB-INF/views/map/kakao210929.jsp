@@ -7,8 +7,18 @@
 	<title>지도</title>
 	<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=7b432eae714388479ae3357175dbadc8&libraries=services,clusterer,drawing"></script>
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.js"></script>
-	
+	<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+	<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ include file="kakaoCss.jsp"%>
+
+<style type="text/css">
+.colran{
+	height: 1rem;
+	width: 1rem;
+	background-color: aqua;
+}
+
+</style>
 
 <script type="text/javascript">
 var markerTitle = 0;
@@ -299,6 +309,37 @@ var markerTitle = 0;
 			$("#select2").append(optStr);
 		});
 		
+		
+		function getRandomColor() {
+			  var letters = '0123456789ABCDEF';
+			  var color = '#';
+			  for (var i = 0; i < 6; i++) {
+			    color += letters[Math.floor(Math.random() * 16)];
+			  }
+			  return color;
+			}
+
+
+
+			function setRandomColor() {
+			  $("#colorpad").css("background-color", getRandomColor());
+			}
+		
+		function ccc () {
+			for(var i = 0; i < 10; i++){
+				//var css = "#"+(parseInt(Math.random()*0xffffff)).toString(16);
+				//$("#1").css("background", getRandomColor());
+				var selector = document.getElementById(i);
+				selector.style.color = "#"+(parseInt(Math.random()*0xffffff)).toString(16);
+				
+				
+			}
+		}
+		ccc();
+		//$('#1').css("background", 'ffff');
+		//var selector = document.getElementById('1');
+		//selector.style.color = "#"+(parseInt(Math.random()*0xffffff)).toString(16);
+		
 	});
 	</script>
 
@@ -309,7 +350,11 @@ var markerTitle = 0;
 	<form action="" name="frm" id="frm" >
 	<div style="display: flex; align-items: center;">
 		<img alt="logo" src="/my/resources/imgs/캡처.PNG" style="margin-right: 10px;">
-
+<div class="colran" id="1">1</div>
+<div class="colran" id="2">2</div>
+<div class="colran" id="3">3</div>
+<div class="colran" id="4">4</div>
+<div class="colran" id="5">5</div>
 	    	<select id="select1" name="select1">
     			<option>시 지역</option>
     			<option>서울시</option>
@@ -345,7 +390,6 @@ var markerTitle = 0;
 	    </div>
 	</div>
 </div>
-
 	<div id="floatDiv" style="display:none;">
 	    <div id="listDiv"></div>
 	</div>
