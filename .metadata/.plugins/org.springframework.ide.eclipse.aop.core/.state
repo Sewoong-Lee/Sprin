@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <aop-reference-model>
 <aop-project name="mongo2"/>
+<aop-project name="demo"/>
 <aop-project name="sp02_course"/>
 <aop-project name="mongo"/>
 <aop-project name="mongo_test"/>

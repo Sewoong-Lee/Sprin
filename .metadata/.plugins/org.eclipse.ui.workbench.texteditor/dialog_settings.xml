@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
-		<item key="selection" value="time"/>
+		<item key="selection" value="8082"/>
 		<item key="wrap" value="true"/>
 		<item key="casesensitive" value="false"/>
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
 		<list key="findhistory">
+			<item value="8082"/>
+			<item value="8081"/>
 			<item value="time"/>
 			<item value="mongodb-driver-legacy"/>
 			<item value="org.springframework"/>
@@ -17,12 +19,10 @@
 			<item value="text/html;charset=UTF-8"/>
 			<item value="mvc:annotation-driven"/>
 			<item value="cinema/city"/>
-			<item value="8082"/>
 			<item value="sqlSessionFactory"/>
 			<item value="rg.springframework.data"/>
 			<item value="System.out.println"/>
 			<item value="prin"/>
-			<item value="sys"/>
 		</list>
 		<list key="replacehistory">
 		</list>
