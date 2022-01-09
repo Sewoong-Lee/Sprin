@@ -22,17 +22,16 @@ import reactor.core.publisher.Flux;
 
 
 public interface ChatRepository extends ReactiveMongoRepository<Chat, String>{
-	
+	//귓속말용
 	@Tailable
 	@Query("{ sender : ?0, receiver: ?1 }")
 	Flux<Chat> mFindBySender(String sender, String receiver);
 	
-//	@Tailable
-//	@Query("{ sender : ?0, receiver: ?1 }")
-//	public Flux<Chat> getaa(String sender, String receiver) {
-//		return mFindBySender(sender, receiver);
-//	}
 	
+	//지금은 이거만 사용 
+	@Tailable
+	@Query("{ roomNum:?0 }")
+	Flux<Chat> mFindByRoomNum(Integer roomNum);
 	
 	
 }

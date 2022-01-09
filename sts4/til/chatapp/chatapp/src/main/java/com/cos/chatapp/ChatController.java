@@ -22,6 +22,7 @@ public class ChatController {
 	
 	private final ChatRepository chatRepository;
 	
+	//귓속말시 사용
 	@CrossOrigin //외부 접속 허용
 	//MediaType.TEXT_EVENT_STREAM_VALUE : sse프로토콜, 데이터가 생길때마다 지속적으로 보내준다.
 	@GetMapping(value = "/sender/{sender}/receiver/{receiver}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
@@ -31,6 +32,14 @@ public class ChatController {
 				.subscribeOn(Schedulers.boundedElastic());
 	}
 	
+	//일반 채팅
+	@CrossOrigin //외부 접속 허용
+	@GetMapping(value = "/chat/roomNum/{roomNum}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+	public Flux<Chat> findByUsername(@PathVariable Integer roomNum) {
+		
+		return chatRepository.mFindByRoomNum(roomNum)
+				.subscribeOn(Schedulers.boundedElastic());
+	}
 	
 	@CrossOrigin
 	@PostMapping("/chat")
